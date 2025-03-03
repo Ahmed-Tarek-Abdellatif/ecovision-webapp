@@ -1,42 +1,69 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.custom-navbar {
+  background: rgba(255, 255, 255, 0.1); /* Transparent white */
+  backdrop-filter: blur(10px); /* Glass effect */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+}
+
+.navbar-logo {
+  width: 70px; /* Adjust logo size */
+  height: auto;
+  margin-top: 0px;
+}
+
+.nav-link {
+  color: #1a2a4a; /* Dark blue */
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin: 0 15px;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: #0c3d91;
+}
+
+.contact-btn {
+  background: linear-gradient(90deg, #28a745, #b5e6d4); /* Green Gradient */
+  padding: 8px 20px;
+  border-radius: 15px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.contact-btn:hover {
+  background: linear-gradient(90deg, #218838, #90d1b7);
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* Prevents horizontal scroll */
+}
+
+.home-container {
+  min-height: 500vh; /* Ensures enough scrolling space */
+  width: 100vw; /* Makes sure it spans the full width */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-}
+  color: white; /* Adjust text color for readability */
+  font-family: Arial, sans-serif;
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  background: linear-gradient(
+    to bottom, 
+    #0D74AC 0%,   
+    #A0D2EB 25%,  
+    #E9F0C8 50%,  
+    #57BF7D 100%  
+  );
+  
+  background-size: cover; /* Ensures full coverage */
+  background-attachment: fixed; /* Keeps it fixed */
 }
