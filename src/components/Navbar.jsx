@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import "../App.css"; // Create this file for custom styling
+import "../App.css"; 
 
 function Navbarr() {
   return (
