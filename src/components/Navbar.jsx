@@ -18,7 +18,7 @@ function Navbarr() {
         {/* Navigation Links */}
         <Nav className="mx-auto">
           <NavLink to="/about" className="nav-link">ABOUT</NavLink>
-          <NavLink to="/aqi" className="nav-link">AQI</NavLink>
+          <NavLink to="../pages/AQI" className="nav-link">AQI</NavLink>
           <NavLink to="/wqi" className="nav-link">WQI</NavLink>
           <NavLink to="/guide" className="nav-link">Guide</NavLink>
         </Nav>

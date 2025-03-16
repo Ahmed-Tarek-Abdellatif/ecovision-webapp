@@ -1,13 +1,12 @@
 import React from "react";
-import "../App.css"; 
+import "../App.css"; // Import the CSS file
 
-
-function HomePage() {
+function AQI() {
     return (
         <div className="home-container">
-        <h1>Home Page</h1>
+        <h1>AQI Page</h1>
         </div>
     );
 }
 
-export default HomePage;
+export default AQI;

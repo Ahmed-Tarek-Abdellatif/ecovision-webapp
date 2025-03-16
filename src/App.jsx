@@ -5,17 +5,21 @@ import {
   RouterProvider
 } from 'react-router-dom'
 
+
 import React from 'react'
 import MainLayout from './Layouts/MainLayout'
 import HomePage from './pages/HomePage'
+import AQI from './pages/AQI'
 
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-    <Route path='/' element= {<MainLayout />}>
-      <Route index element={<HomePage/>} />
+      <Route path='/' element={<MainLayout />}>
+      <Route index element={<HomePage />} />  {/* Loads at '/' */}
+      <Route path="aqi" element={<AQI />} />  {/* Loads at '/aqi' */}
     </Route>
+    
     )
   )
   return <RouterProvider router = {router}/>
