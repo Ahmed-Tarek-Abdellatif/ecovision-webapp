@@ -3,12 +3,14 @@
   backdrop-filter: blur(10px); /* Glass effect */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
+  max-width: calc(100% - 20px); /* Ensures it stops before the scrollbar */
+  margin: 0 , 0 auto; /* Centers the navbar */
 }
 
 .navbar-logo {
   width: 70px; /* Adjust logo size */
   height: auto;
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 .nav-link {
@@ -45,12 +47,70 @@ body, html {
   overflow-x: hidden; /* Prevents horizontal scroll */
 }
 
+/* Add this section for the footer container */
 .footer-container {
-  background: rgba(207, 233, 198, 0.7);  /* Light green with transparency */
-  backdrop-filter: blur(5px);  /* Optional glass effect */
+  background: rgba(207, 233, 198, 0.7); /* Light green with transparency */
+  backdrop-filter: blur(5px); /* Optional glass effect */
   border-top: 1px solid rgba(0, 0, 0, 0.1); /* Soft border */
+  padding: 20px 0; /* Add padding for spacing */
+  text-align: center; /* Center the text */
 }
 
+.footer-container .contact-section {
+  display: flex;
+  justify-content: space-around; /* Space out the contact items */
+  align-items: center; /* Center align the items vertically */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  margin-bottom: 20px; /* Add margin at the bottom */
+}
+
+.footer-container .contact-item {
+  display: flex;
+  align-items: center;
+  margin: 0 10px; /* Add margin for spacing */
+}
+
+.footer-container .contact-item a {
+  color: #1a2a4a; /* Dark blue */
+  text-decoration: none;
+  margin-left: 5px; /* Add margin to the left of the icon */
+}
+
+.footer-container .social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 50px; /* Add gap between icons */
+  margin-bottom: 20px; /* Add margin at the bottom */
+}
+
+.footer-container .social-icons a .icon {
+  color: #000000; /* Dark blue */
+  font-size: 34px; /* Increase icon size */
+}
+
+.footer-container .social-icons a .icon:hover {
+  color: #0c3d91; /* Change color on hover */
+}
+
+.footer-container p {
+  margin: 0;
+  text-align: center;
+}
+
+.footer-logo {
+  width: 100px; /* Adjust the size of the logo */
+  height: auto;
+}
+
+.footer-container hr {
+  width: 100vw; /* Make the line take the whole page width */
+  margin: 20px 0; /* Add margin for spacing */
+  border: none; /* Remove default border */
+  border-top: 1px solid rgb(0, 0, 0); /* Add custom border */
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
 .home-container {
   min-height: 500vh; /* Ensures enough scrolling space */
@@ -62,15 +122,13 @@ body, html {
   text-align: center;
   color: white; /* Adjust text color for readability */
   font-family: Arial, sans-serif;
-
   background: linear-gradient(
     to bottom, 
     #0D74AC 0%,   
     #A0D2EB 25%,  
     #E9F0C8 50%,  
-    #57BF7D 100%  
+    #57BF7D 100%
   );
-  
   background-size: cover; /* Ensures full coverage */
   background-attachment: fixed; /* Keeps it fixed */
 }
