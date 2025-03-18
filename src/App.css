@@ -3,7 +3,7 @@
   backdrop-filter: blur(10px); /* Glass effect */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
-  max-width: calc(100% - 20px); /* Ensures it stops before the scrollbar */
+  max-width: calc(100% - 15px); /* Ensures it stops before the scrollbar */
   margin: 0 , 0 auto; /* Centers the navbar */
 }
 
@@ -113,22 +113,66 @@ body, html {
 }
 
 .home-container {
-  min-height: 500vh; /* Ensures enough scrolling space */
-  width: 100vw; /* Makes sure it spans the full width */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white; /* Adjust text color for readability */
-  font-family: Arial, sans-serif;
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
   background: linear-gradient(
     to bottom, 
     #0D74AC 0%,   
-    #A0D2EB 25%,  
     #E9F0C8 50%,  
     #57BF7D 100%
   );
-  background-size: cover; /* Ensures full coverage */
-  background-attachment: fixed; /* Keeps it fixed */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content {
+  color: white;
+  max-width: 50%;
+  text-align: left;
+  z-index: 1; /* Ensure content is above the first card */
+}
+
+.content h1 {
+  font-size: 3rem;
+  margin-left: 50px;
+  margin-bottom: 20px;
+}
+
+.content p {
+  font-size: 1.2rem;
+  margin-left: 50px;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: flex;
+  margin-left: 50px;
+  gap: 10px;
+}
+
+.start-button, .more-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.start-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.more-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.start-button:hover {
+  background: linear-gradient(90deg, #218838, #90d1b7);
+}
+
+.more-button:hover {
+  background: linear-gradient(90deg, #007bff, #7eb9f9);
 }
