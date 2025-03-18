@@ -162,6 +162,15 @@ body, html {
   gap: 20px; /* Add gap between cards */
 }
 
+.services-cards .card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.8s ease; /* Smooth transition for the transform property */
+}
+
+.services-cards .card:hover {
+  transform: translateY(-40px); /* Move the card up by 10px on hover */
+}
+
 /* Add this section for the footer container */
 .footer-container {
   background: rgba(207, 233, 198, 0.7); /* Light green with transparency */
