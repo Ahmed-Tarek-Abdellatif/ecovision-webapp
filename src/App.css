@@ -3,8 +3,8 @@
   backdrop-filter: blur(10px); /* Glass effect */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
-  max-width: calc(100% ); /* Ensures it stops before the scrollbar */
-  margin: 0 , 0 auto; /* Centers the navbar */
+  width: 100%; /* Ensure it spans the full width */
+  margin: 0 auto; /* Centers the navbar */
 }
 
 .navbar-logo {
@@ -51,6 +51,10 @@ body, html {
 
 .content-wrapper {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .home-container {
@@ -217,6 +221,29 @@ body, html {
   border-radius: 4px;
 }
 
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px; /* Adjust margin as needed */
+  margin-bottom: 20px;
+}
+
+.upload-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.upload-button:hover {
+  background-color: #45a049;
+}
+
 /* Add this section for the footer container */
 .footer-container {
   background: rgba(207, 233, 198, 0.7); /* Light green with transparency */
@@ -281,3 +308,4 @@ body, html {
   left: 50%;
   transform: translateX(-50%);
 }
+
