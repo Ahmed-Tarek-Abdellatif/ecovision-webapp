@@ -171,6 +171,52 @@ body, html {
   transform: translateY(-40px); /* Move the card up by 10px on hover */
 }
 
+.faq-section {
+  margin: 40px ;
+  background-color: #f5f5dc; /* Light yellow background */
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 40%;
+  max-height: 30%;
+}
+
+.faq-section h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.faq-item {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  background-color: #e0e0d1; /* Slightly darker yellow for questions */
+  border-radius: 4px;
+}
+
+.faq-question h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.faq-question span {
+  font-size: 24px;
+}
+
+.faq-answer {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #fff; /* White background for answers */
+  border-radius: 4px;
+}
+
 /* Add this section for the footer container */
 .footer-container {
   background: rgba(207, 233, 198, 0.7); /* Light green with transparency */
