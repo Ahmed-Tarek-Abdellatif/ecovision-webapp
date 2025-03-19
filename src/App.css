@@ -309,3 +309,34 @@ body, html {
   transform: translateX(-50%);
 }
 
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 18px;
+  text-align: left;
+}
+
+.data-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 15px;
+}
+
+.data-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.data-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.data-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
