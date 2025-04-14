@@ -9,7 +9,7 @@ function Navbarr() {
       <Container>
         <Navbar.Brand href="/">
           <img
-            src="src\assets\Logo.png" // Replace with your logo path
+            src="src\assets\Logo.png"
             alt="Logo"
             className="navbar-logo"
           />
