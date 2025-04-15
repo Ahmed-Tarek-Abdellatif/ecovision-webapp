@@ -29,8 +29,11 @@ function AQI() {
   };
 
   return (
-    <div className="home-container">
-      <h1>AQI Page</h1>
+    <div className="aqi-section">
+      <h1 className="aqi-title">Data Uploading</h1>
+      <p className="aqi-subtitle">
+        Dataset format <span className="format-tag">.csv</span>
+      </p>
       <div className="upload-container">
         <input
           type="file"
@@ -46,25 +49,26 @@ function AQI() {
           Upload
         </button>
       </div>
+
       {data.length > 0 && (
-        <table className="data-table">
-          <thead>
-            <tr>
-              {Object.keys(data[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, index) => (
-              <tr key={index}>
-                {Object.values(row).map((value, i) => (
-                  <td key={i}>{value}</td>
-                ))}
-              </tr>
+        <div className="aqi-table">
+          <div className="aqi-row">
+            {Object.keys(data[0]).map((key, index) => (
+              <div key={index} className="aqi-cell">
+                {key}
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+          {data.map((row, rowIndex) => (
+            <div key={rowIndex} className="aqi-row">
+              {Object.values(row).map((value, colIndex) => (
+                <div key={colIndex} className="aqi-cell">
+                  {value}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
