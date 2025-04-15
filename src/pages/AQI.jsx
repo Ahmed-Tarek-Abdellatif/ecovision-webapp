@@ -53,7 +53,7 @@ function AQI() {
                     </div>
                 </div>
                 <Card
-                    width="300px"
+                    width="500px"
                     height="400px"
                     position="relative"
                     path="src/assets/Page 1/Page 1.2.png"
@@ -62,7 +62,7 @@ function AQI() {
                     marginTop="170px"
                     marginBottom="20px"
                     marginLeft="10px"
-                    marginRight="50px"
+                    marginRight="200px"
                 />
             </div>
             <h1>AQI Page</h1>

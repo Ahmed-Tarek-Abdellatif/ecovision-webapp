@@ -1,20 +1,21 @@
+/*#region Navbar*/
 .custom-navbar {
-  background: rgba(255, 255, 255, 0.1); /* Transparent white */
-  backdrop-filter: blur(10px); /* Glass effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
-  width: 100%; /* Ensure it spans the full width */
-  margin: 0 auto; /* Centers the navbar */
+  width: 100%;
+  margin: 0 auto;
 }
 
 .navbar-logo {
-  width: 70px; /* Adjust logo size */
+  width: 70px;
   height: auto;
   margin-top: 0;
 }
 
 .nav-link {
-  color: #1a2a4a; /* Dark blue */
+  color: #1a2a4a;
   font-weight: bold;
   font-size: 16px;
   text-transform: uppercase;
@@ -23,24 +24,48 @@
 }
 
 .nav-link:hover {
-  color: #0c3d91;
+  color: #000000;
 }
+/*#endregion*/
 
-.contact-btn {
-  background: linear-gradient(90deg, #28a745, #b5e6d4); /* Green Gradient */
+/*#region Buttons*/
+.contact-btn, .start-button, .more-button, .upload-button {
+  background: #000000;
+  color: white;
   padding: 8px 20px;
   border-radius: 15px;
-  color: white;
   font-weight: bold;
   text-decoration: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
 }
 
-.contact-btn:hover {
-  background: linear-gradient(90deg, #218838, #90d1b7);
+.contact-btn:hover, .start-button:hover, .more-button:hover, .upload-button:hover {
+  background: #d3d3d3;
+  color: #000000;
 }
 
+.buttons {
+  display: flex;
+  margin-left: 50px;
+  gap: 10px;
+}
+
+.upload-button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+/*#endregion*/
+
+/*#region Body*/
 body, html {
-  overflow-x: hidden; /* Prevents horizontal scroll */
+  overflow-x: hidden;
 }
 
 .main-layout {
@@ -60,30 +85,26 @@ body, html {
 .home-container {
   position: relative;
   width: 100%;
-  background: linear-gradient(
-    to bottom, 
-    #0D74AC 0%,   
-    #E9F0C8 50%,  
-    #57BF7D 100%
-  );
+  background: to bottom, #fcfcfc 0%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+/*#endregion*/
 
-.home-header{
-  padding-left: 0px;
+/*#region Header*/
+.home-header {
+  background: #e7e5e5;
+  color: white;
+  padding: 20px;
   display: flex;
-  position: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.content {
-  margin-top: 150px;
+.home-header .content {
   color: white;
-  max-width: 50%;
-  text-align: left;
-  z-index: 1; /* Ensure content is above the first card */
 }
 
 .content h1 {
@@ -97,38 +118,9 @@ body, html {
   margin-left: 50px;
   margin-bottom: 20px;
 }
+/*#endregion*/
 
-.buttons {
-  display: flex;
-  margin-left: 50px;
-  gap: 10px;
-}
-
-.start-button, .more-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.start-button {
-  background-color: #28a745;
-  color: white;
-}
-
-.more-button {
-  background-color: #007bff;
-  color: white;
-}
-
-.start-button:hover {
-  background: linear-gradient(90deg, #218838, #90d1b7);
-}
-
-.more-button:hover {
-  background: linear-gradient(90deg, #007bff, #7eb9f9);
-}
-
+/*#region Home Page*/
 .services-section {
   width: 100%;
   padding: 40px 20px;
@@ -138,7 +130,7 @@ body, html {
   align-items: center;
 }
 
-.services-header{
+.services-header {
   margin-left: 50px;
   max-width: 40%;
   text-align: left;
@@ -162,22 +154,24 @@ body, html {
 .services-cards {
   display: flex;
   justify-content: space-around;
-  flex-wrap: nowrap; /* Ensure cards are on the same row */
-  gap: 20px; /* Add gap between cards */
+  flex-wrap: nowrap;
+  gap: 20px;
 }
 
 .services-cards .card {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.8s ease; /* Smooth transition for the transform property */
+  transition: transform 0.8s ease;
 }
 
 .services-cards .card:hover {
-  transform: translateY(-40px); /* Move the card up by 10px on hover */
+  transform: translateY(-40px);
 }
+/*#endregion*/
 
+/*#region FAQ*/
 .faq-section {
-  margin: 40px ;
-  background-color: #f5f5dc; /* Light yellow background */
+  margin: 40px;
+  background-color: #f5f5dc;
   padding: 20px;
   border-radius: 8px;
   max-width: 40%;
@@ -201,7 +195,7 @@ body, html {
   align-items: center;
   cursor: pointer;
   padding: 10px;
-  background-color: #e0e0d1; /* Slightly darker yellow for questions */
+  background-color: #e0e0d1;
   border-radius: 4px;
 }
 
@@ -217,76 +211,35 @@ body, html {
 .faq-answer {
   margin-top: 10px;
   padding: 10px;
-  background-color: #fff; /* White background for answers */
+  background-color: #fff;
   border-radius: 4px;
 }
+/*#endregion*/
 
+/*#region Upload*/
 .upload-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px; /* Adjust margin as needed */
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
+/*#endregion*/
 
-.upload-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  margin: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.upload-button:hover {
-  background-color: #45a049;
-}
-
-/* Add this section for the footer container */
+/*#region Footer*/
 .footer-container {
-  background: rgba(207, 233, 198, 0.7); /* Light green with transparency */
-  backdrop-filter: blur(5px); /* Optional glass effect */
-  border-top: 1px solid rgba(0, 0, 0, 0.1); /* Soft border */
-  padding: 20px 0; /* Add padding for spacing */
-  text-align: center; /* Center the text */
+  background: #000000;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
 }
 
-.footer-container .contact-section {
-  display: flex;
-  justify-content: space-around; /* Space out the contact items */
-  align-items: center; /* Center align the items vertically */
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  margin-bottom: 20px; /* Add margin at the bottom */
-}
-
-.footer-container .contact-item {
-  display: flex;
-  align-items: center;
-  margin: 0 10px; /* Add margin for spacing */
-}
-
-.footer-container .contact-item a {
-  color: #1a2a4a; /* Dark blue */
-  text-decoration: none;
-  margin-left: 5px; /* Add margin to the left of the icon */
-}
-
-.footer-container .social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 50px; /* Add gap between icons */
-  margin-bottom: 20px; /* Add margin at the bottom */
-}
-
+.footer-container .contact-item a,
 .footer-container .social-icons a .icon {
-  color: #000000; /* Dark blue */
-  font-size: 34px; /* Increase icon size */
+  color: white;
 }
 
 .footer-container .social-icons a .icon:hover {
-  color: #0c3d91; /* Change color on hover */
+  color: #ffffff;
 }
 
 .footer-container p {
@@ -295,20 +248,22 @@ body, html {
 }
 
 .footer-logo {
-  width: 100px; /* Adjust the size of the logo */
+  width: 100px;
   height: auto;
 }
 
 .footer-container hr {
-  width: 100vw; /* Make the line take the whole page width */
-  margin: 20px 0; /* Add margin for spacing */
-  border: none; /* Remove default border */
-  border-top: 1px solid rgb(0, 0, 0); /* Add custom border */
+  width: 100vw;
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid rgb(0, 0, 0);
   position: relative;
   left: 50%;
   transform: translateX(-50%);
 }
+/*#endregion*/
 
+/*#region Data Table*/
 .data-table {
   width: 100%;
   border-collapse: collapse;
@@ -340,3 +295,4 @@ body, html {
 .data-table tbody tr:last-of-type {
   border-bottom: 2px solid #009879;
 }
+/*#endregion*/
