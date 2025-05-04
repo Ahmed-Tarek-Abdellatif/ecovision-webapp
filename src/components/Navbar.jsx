@@ -1,37 +1,32 @@
 import React from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
-import "../App.css";
+import { Link } from "react-router-dom";
+import "./Navbar.css";
 
-function Navbarr() {
+const Navbar = () => {
   return (
-    <Navbar expand="lg" className="custom-navbar" fixed="top">
-      <Container>
-        <Navbar.Brand href="/">
-          <img src="src\assets\Logo.png" alt="Logo" className="navbar-logo" />
-        </Navbar.Brand>
-
-        <Nav className="mx-auto">
-          <NavLink to="/aqi" className="nav-link">
-            AQI
-          </NavLink>
-          <NavLink to="/wqi" className="nav-link">
-            WQI
-          </NavLink>
-          <NavLink
-            to="https://docs.google.com/document/d/1J-6mRalaMcgo4ir5gT7oSHkPmytGK4uv0MjuuPoOEoo/edit?usp=sharing"
-            className="nav-link"
-          >
-            Documentation
-          </NavLink>
-        </Nav>
-
-        <a href="mailto:bit.x.byte@gmail.com" className="contact-btn">
-          CONTACT
-        </a>
-      </Container>
-    </Navbar>
+    <nav className="navbar">
+      <div className="navbar-logo">
+        <img src="path-to-logo.png" alt="Logo" />
+      </div>
+      <ul className="navbar-links">
+        <li>
+          <Link to="/aqi" className="nav-link">AQI</Link>
+        </li>
+        <li>
+          <Link to="/wqi" className="nav-link">WQI</Link>
+        </li>
+        <li>
+          <Link to="/documentation" className="nav-link">Documentation</Link>
+        </li>
+        <li>
+          <Link to="/contact" className="nav-link">Contact</Link>
+        </li>
+        <li>
+          <Link to="/login" className="nav-link login-link">Login</Link>
+        </li>
+      </ul>
+    </nav>
   );
-}
+};
 
-export default Navbarr;
+export default Navbar;
