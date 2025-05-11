@@ -31,46 +31,11 @@ function WQI() {
 
   return (
     <div className="home-container">
-      <div className="home-header">
-        <Card
-          width="110%"
-          height="500px"
-          position="absolute"
-          path="src/assets/Page 1/Page 1.1.png"
-          alt="Description of image"
-          style={{ border: "1px solid ", borderRadius: "8px", zIndex: 0 }}
-          marginTop="0px"
-          marginBottom="20px"
-          marginLeft="-30px"
-          marginRight="0px"
-        />
-        <div className="content">
-          <h1>Aiming for a Green Future</h1>
-          <p>
-            Join us in creating sustainable cities where clean air and pure
-            water drive healthier communities. Together, we can build a future
-            that thrives in harmony with nature.
-          </p>
-        </div>
-        <Card
-          width="500px"
-          height="400px"
-          position="relative"
-          path="src/assets/Page 1/Page 1.2.png"
-          alt="Description of image"
-          style={{
-            border: "1px solid ",
-            borderRadius: "8px",
-            boxShadow: "0 6px 8px rgba(0, 0, 0)",
-            left: "300px",
-          }}
-          marginTop="170px"
-          marginBottom="20px"
-          marginLeft="10px"
-          marginRight="200px"
-        />
-      </div>
-      <h1>WQI Page</h1>
+
+      <h1 className="aqi-title">Data Uploading</h1>
+      <p className="aqi-subtitle">
+        Dataset format <span className="format-tag">.csv</span>
+      </p>
       <div className="upload-container">
         <input
           type="file"

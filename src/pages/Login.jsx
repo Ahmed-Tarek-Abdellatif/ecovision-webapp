@@ -3,15 +3,9 @@ import "../App.css";
 
 const LoginPage = () => {
   return (
-    <div className="home-container">
-      
+
       <div className="login-page">
         <div className="login-left">
-          <img
-            src="path-to-your-image.jpg"
-            alt="Nature Background"
-            className="login-image"
-          />
         </div>
         <div className="login-right">
           <h1 className="login-title">Welcome Back</h1>
@@ -47,7 +41,6 @@ const LoginPage = () => {
           </p>
         </div>
       </div>
-    </div>
   );
 };
 

@@ -232,11 +232,19 @@ hr {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* Corrected syntax */
-  margin-bottom: 20px; /* Fixed double colon (::) to single colon (:) */
-  width: 100%;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 50%; /* Set a smaller width */
+  max-width: 600px; /* Optional: Limit the maximum width */
   flex-direction: column;
   z-index: 5;
+  background: linear-gradient(to bottom, #f0f0f0, #d9d9d9); /* Add gradient background */
+  padding: 20px; /* Add padding for spacing */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+  border: 1px solid #ccc; /* Add a light border */
+  margin-left: auto; /* Center horizontally */
+  margin-right: auto; /* Center horizontally */
 }
 /*#endregion */
 
@@ -328,7 +336,7 @@ hr {
   font-size: 3rem;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #ffffff; /* White text */
+  color: #000000; /* White text */
 }
 
 .aqi-subtitle {
@@ -499,6 +507,7 @@ hr {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  margin-right: 15%;
 }
 
 .login-left {
