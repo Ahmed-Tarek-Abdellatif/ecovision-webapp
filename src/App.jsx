@@ -10,7 +10,8 @@ import MainLayout from "./Layouts/MainLayout";
 import HomePage from "./pages/HomePage";
 import AQI from "./pages/AQI";
 import WQI from "./pages/WQI";
-import LoginPage from "./pages/Login"; // <-- Correct import of LoginPage
+import LoginPage from "./pages/Login";
+import Register from "./pages/Register";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="aqi" element={<AQI />} /> {/* Loads at '/aqi' */}
         <Route path="wqi" element={<WQI />} /> {/* Loads at '/wqi' */}
         <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<Register />} /> {/* Loads at '/register' */}
 
       </Route>
     )
