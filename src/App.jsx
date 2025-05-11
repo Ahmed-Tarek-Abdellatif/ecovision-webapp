@@ -10,7 +10,7 @@ import MainLayout from "./Layouts/MainLayout";
 import HomePage from "./pages/HomePage";
 import AQI from "./pages/AQI";
 import WQI from "./pages/WQI";
-import LoginPage from "./pages/LoginPage"; // <-- 1. Import LoginPage here
+import LoginPage from "./pages/Login"; // <-- 1. Import LoginPage here
 
 function App() {
   const router = createBrowserRouter(
