@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
 import "../App.css";
+import Card from "../components/Card"; // Assuming you want to keep the Card component
 
 function AQI() {
   const [file, setFile] = useState(null);
@@ -16,7 +17,7 @@ function AQI() {
         complete: (result) => {
           const rows = result.data;
           if (rows.length > 19) {
-            setData(rows.slice(0, 20));
+            setData(rows.slice(0, 20)); // Limit to first 20 rows
           } else {
             setData(rows);
           }
@@ -29,7 +30,46 @@ function AQI() {
   };
 
   return (
-    <div className="aqi-section">
+    <div className="home-container">
+      <div className="home-header">
+        <Card
+          width="110%"
+          height="500px"
+          position="absolute"
+          path="src/assets/Page 1/Page 1.1.png"
+          alt="Description of image"
+          style={{ border: "1px solid ", borderRadius: "8px", zIndex: 0 }}
+          marginTop="0px"
+          marginBottom="20px"
+          marginLeft="-30px"
+          marginRight="0px"
+        />
+        <div className="content">
+          <h1>Aiming for a Green Future</h1>
+          <p>
+            Join us in creating sustainable cities where clean air and pure
+            water drive healthier communities. Together, we can build a future
+            that thrives in harmony with nature.
+          </p>
+        </div>
+        <Card
+          width="500px"
+          height="400px"
+          position="relative"
+          path="src/assets/Page 1/Page 1.2.png"
+          alt="Description of image"
+          style={{
+            border: "1px solid ",
+            borderRadius: "8px",
+            boxShadow: "0 6px 8px rgba(0, 0, 0)",
+            left: "300px",
+          }}
+          marginTop="170px"
+          marginBottom="20px"
+          marginLeft="10px"
+          marginRight="200px"
+        />
+      </div>
       <h1 className="aqi-title">Data Uploading</h1>
       <p className="aqi-subtitle">
         Dataset format <span className="format-tag">.csv</span>
@@ -51,24 +91,24 @@ function AQI() {
       </div>
 
       {data.length > 0 && (
-        <div className="aqi-table">
-          <div className="aqi-row">
-            {Object.keys(data[0]).map((key, index) => (
-              <div key={index} className="aqi-cell">
-                {key}
-              </div>
-            ))}
-          </div>
-          {data.map((row, rowIndex) => (
-            <div key={rowIndex} className="aqi-row">
-              {Object.values(row).map((value, colIndex) => (
-                <div key={colIndex} className="aqi-cell">
-                  {value}
-                </div>
+        <table className="data-table">
+          <thead>
+            <tr>
+              {Object.keys(data[0]).map((key) => (
+                <th key={key}>{key}</th>
               ))}
-            </div>
-          ))}
-        </div>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row, index) => (
+              <tr key={index}>
+                {Object.values(row).map((value, i) => (
+                  <td key={i}>{value}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
