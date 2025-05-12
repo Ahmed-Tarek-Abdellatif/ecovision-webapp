@@ -12,7 +12,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/register", {
+      const response = await axios.post("http://localhost:3000/auth/register", {
         userName,
         email,
         password,
@@ -21,6 +21,7 @@ const Register = () => {
 
       alert("User created successfully!");
       // Redirect to login page after successful registration
+      window.location.href = "/login"; // Redirect to login page
     } catch (error) {
       alert("Registration failed: " + error.response.data.message);
     }
