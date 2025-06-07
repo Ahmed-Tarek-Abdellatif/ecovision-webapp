@@ -6,8 +6,15 @@ import FAQItem from "../components/FAQ";
 function HomePage() {
   return (
     <div className="home-container">
-      <div className="home-header">
-        <div className="content">
+      <div
+        className="home-header"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+        }}
+      >
+        <div className="content" style={{ flex: 1 }}>
           <h1>Aiming for a Green Future</h1>
           <p>
             Join us in creating sustainable cities where clean air and pure
@@ -15,19 +22,29 @@ function HomePage() {
             that thrives in harmony with nature.
           </p>
         </div>
-        <Card
-          width="300px"
-          height="400px"
-          position="relative"
-          path=""
-          alt=""
+        <div
           style={{
-            border: "1px solid ",
-            borderRadius: "8px",
-            boxShadow: "0 6px 8px rgba(0, 0, 0)",
-            left: "300px",
+            flex: "0 0 320px",
+            marginLeft: "40px",
+            display: "flex",
+            alignItems: "center",
+            marginTop: "70px",
           }}
-        />
+        >
+          <Card
+            width="300px"
+            height="400px"
+            position="relative"
+            path="src\assets\Page 1\Header.jpg"
+            alt="Header Image"
+            style={{
+              border: "1px solid ",
+              borderRadius: "8px",
+              boxShadow: "0 6px 8px rgba(0, 0, 0, 0.15)",
+              marginLeft: "0",
+            }}
+          />
+        </div>
       </div>
       <div className="services-section">
         <div className="services-header">
@@ -44,8 +61,8 @@ function HomePage() {
             width="200px"
             height="300px"
             position="relative"
-            path=""
-            alt=""
+            path="src\assets\Page 1\AirCard.jpg"
+            alt="Air Quality Card"
             style={{
               border: "1px solid #ccc",
               borderRadius: "8px",
@@ -60,8 +77,8 @@ function HomePage() {
             width="200px"
             height="300px"
             position="relative"
-            path=""
-            alt=""
+            path="src\assets\Page 1\WaterCard.jpg"
+            alt="Water Quality Card"
             style={{
               border: "1px solid #ccc",
               borderRadius: "8px",
@@ -76,8 +93,8 @@ function HomePage() {
             width="200px"
             height="300px"
             position=""
-            path=""
-            alt=""
+            path="src\assets\Page 1\GreenSolutionCard.jpg"
+            alt="Green Land Card"
             style={{
               border: "1px solid #ccc",
               borderRadius: "8px",
