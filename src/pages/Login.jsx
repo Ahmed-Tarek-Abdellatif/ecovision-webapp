@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Card from "../components/Card";
 import "../App.css";
 
 const Login = () => {
@@ -37,10 +38,18 @@ const Login = () => {
     <div className="home-container">
       <div className="login-page">
         <div className="login-left">
-          <img
-            src="path-to-your-image.jpg"
-            alt="Login Background"
-            className="login-image"
+          <Card
+            width="350px"
+            height="450px"
+            position="relative"
+            path="src\assets\Login.jpg"
+            alt="Header Image"
+            style={{
+              border: "1px solid ",
+              borderRadius: "8px",
+              boxShadow: "0 6px 8px rgba(0, 0, 0, 0.15)",
+              marginLeft: "0",
+            }}
           />
         </div>
         <div className="login-right">

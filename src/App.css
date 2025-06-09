@@ -261,15 +261,17 @@ hr {
 
 /*#region Data Table */
 .data-table {
-  width: 100%;
+  width: 80%;
+  max-width: 95%;
+  margin: 20px auto;
   border-collapse: collapse;
-  margin: 20px 0;
   font-size: 18px;
   text-align: left;
 }
 
 .data-table thead tr {
-  background-color: #009879;
+  background-color: #3b82f6;
+
   color: #ffffff;
   text-align: left;
   font-weight: bold;
@@ -278,6 +280,7 @@ hr {
 .data-table th,
 .data-table td {
   padding: 12px 15px;
+  border-right: 1px solid #e5e7eb;
 }
 
 .data-table tbody tr {
@@ -288,9 +291,7 @@ hr {
   background-color: #f3f3f3;
 }
 
-.data-table tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
-}
+
 /*#endregion */
 
 /*#region Buttons */
@@ -346,12 +347,19 @@ hr {
 .aqi-title {
   font-size: 3rem;
   font-weight: bold;
+  margin-top: 30px;
   margin-bottom: 10px;
   color: #000000; /* White text */
+  text-align: center;
+  width: 100%;
+  display: block;
+  /* Remove justify-content/align-items, not needed for text */
 }
 
 .aqi-subtitle {
-  margin-bottom: 40px; /* Increased from 20px */
+  text-align: center;
+  width: 100%;
+  display: block;
 }
 
 

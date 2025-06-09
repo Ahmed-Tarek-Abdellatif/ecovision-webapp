@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecovision - Air & Water Quality Monitoring</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #f3f4f6;
+        }
+        .data-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        .file-input-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-input-label:hover {
+            border-color: #3b82f6;
+            background-color: #f0f9ff;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-leaf text-green-500 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">Ecovision</span>
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+                    <a href="#" class="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-blue-500 text-sm font-medium" id="home-link">
+                        Home
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium" id="aqi-link">
+                        Air Quality (AQI)
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium" id="wqi-link">
+                        Water Quality (WQI)
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium" id="contact-link">
+                        Contact
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium" id="login-link">
+                        Login / Register
+                    </a>
+                </div>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-button">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="bg-blue-50 border-blue-500 text-blue-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium" id="mobile-home-link">Home</a>
+                <a href="#" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium" id="mobile-aqi-link">Air Quality (AQI)</a>
+                <a href="#" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium" id="mobile-wqi-link">Water Quality (WQI)</a>
+                <a href="#" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium" id="mobile-contact-link">Contact</a>
+                <a href="#" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium" id="mobile-login-link">Login / Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Page -->
+        <div id="home-page" class="page">
+            <!-- Hero Section -->
+            <div class="gradient-bg text-white">
+                <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                    <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+                        <div class="mb-8 lg:mb-0">
+                            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-4">
+                                Monitoring Our Planet's Health
+                            </h1>
+                            <p class="text-xl text-blue-100 max-w-3xl">
+                                Ecovision provides advanced air and water quality monitoring using cutting-edge prediction models to help protect our environment.
+                            </p>
+                            <div class="mt-8">
+                                <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-white hover:bg-gray-100 transition duration-150 ease-in-out">
+                                    Get Started
+                                    <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Earth with leaves" class="rounded-lg shadow-xl">
+                            <div class="absolute -bottom-4 -left-4 bg-white p-4 rounded-lg shadow-lg">
+                                <div class="flex items-center">
+                                    <div class="bg-green-100 p-3 rounded-full mr-3">
+                                        <i class="fas fa-leaf text-green-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Current Global AQI</p>
+                                        <p class="text-xl font-bold text-gray-800">72 <span class="text-green-600">(Moderate)</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About AQI/WQI Section -->
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                        Understanding Quality Indices
+                    </h2>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                        Learn about the metrics we use to measure environmental health
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- AQI Card -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 card-hover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-wind text-blue-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-800">Air Quality Index (AQI)</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                The Air Quality Index (AQI) is a numerical scale used to communicate how polluted the air currently is or how polluted it is forecast to become. It measures major air pollutants including particulate matter (PM2.5 and PM10), ozone (O3), nitrogen dioxide (NO2), sulfur dioxide (SO2), and carbon monoxide (CO).
+                            </p>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-gray-800 mb-2">AQI Categories:</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-green-500 rounded-full mr-2"></span> 0-50: Good</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></span> 51-100: Moderate</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-orange-500 rounded-full mr-2"></span> 101-150: Unhealthy for Sensitive Groups</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-red-500 rounded-full mr-2"></span> 151-200: Unhealthy</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-purple-500 rounded-full mr-2"></span> 201-300: Very Unhealthy</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-maroon-500 rounded-full mr-2"></span> 301-500: Hazardous</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WQI Card -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 card-hover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-tint text-blue-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-800">Water Quality Index (WQI)</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                The Water Quality Index (WQI) is a tool that provides a composite influence of individual water quality parameters on the overall quality of water. It considers parameters like pH, dissolved oxygen (DO), biochemical oxygen demand (BOD), temperature, turbidity, total dissolved solids (TDS), nitrates, and fecal coliform.
+                            </p>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-gray-800 mb-2">WQI Categories:</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-blue-500 rounded-full mr-2"></span> 90-100: Excellent</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-green-500 rounded-full mr-2"></span> 70-90: Good</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></span> 50-70: Medium</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-orange-500 rounded-full mr-2"></span> 25-50: Bad</li>
+                                    <li class="flex items-center"><span class="w-4 h-4 bg-red-500 rounded-full mr-2"></span> 0-25: Very Bad</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Us Section -->
+            <div class="bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto">
+                    <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+                        <div class="mb-8 lg:mb-0">
+                            <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl mb-6">
+                                About Ecovision
+                            </h2>
+                            <p class="text-lg text-gray-600 mb-6">
+                                Ecovision was founded in 2023 with a mission to provide accurate, accessible environmental quality data to individuals, communities, and policymakers worldwide.
+                            </p>
+                            <p class="text-lg text-gray-600 mb-6">
+                                Our team of environmental scientists, data analysts, and software engineers work together to develop advanced prediction models that help anticipate environmental quality changes before they occur.
+                            </p>
+                            <div class="flex space-x-4">
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <i class="fas fa-bullseye text-blue-600 text-2xl mb-2"></i>
+                                    <h3 class="font-bold text-gray-800">Our Mission</h3>
+                                    <p class="text-sm text-gray-600">Empower environmental awareness through data</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <i class="fas fa-eye text-green-600 text-2xl mb-2"></i>
+                                    <h3 class="font-bold text-gray-800">Our Vision</h3>
+                                    <p class="text-sm text-gray-600">A world where clean air and water are accessible to all</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Team working together" class="rounded-lg shadow-xl">
+                            <div class="absolute -bottom-4 -right-4 bg-white p-4 rounded-lg shadow-lg">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 p-3 rounded-full mr-3">
+                                        <i class="fas fa-users text-blue-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Our Team</p>
+                                        <p class="text-xl font-bold text-gray-800">25+ Experts</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                        Why Choose Ecovision?
+                    </h2>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                        Our platform offers comprehensive environmental monitoring solutions
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm transition duration-300 card-hover">
+                        <div class="bg-blue-100 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                            <i class="fas fa-brain text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Advanced AI Models</h3>
+                        <p class="text-gray-600">
+                            Our proprietary machine learning models provide accurate predictions of air and water quality based on historical and real-time data.
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm transition duration-300 card-hover">
+                        <div class="bg-green-100 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                            <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Comprehensive Analytics</h3>
+                        <p class="text-gray-600">
+                            Detailed visualizations and trend analysis help you understand environmental quality patterns over time.
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm transition duration-300 card-hover">
+                        <div class="bg-purple-100 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                            <i class="fas fa-globe-americas text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Global Coverage</h3>
+                        <p class="text-gray-600">
+                            We aggregate data from thousands of monitoring stations worldwide to provide a comprehensive view of environmental health.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AQI Page -->
+        <div id="aqi-page" class="page hidden">
+            <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Air Quality Index (AQI) Analysis</h1>
+                    <p class="text-lg text-gray-600">
+                        Upload your air quality data in CSV format to get detailed analysis and predictions.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div class="md:col-span-2">
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">About AQI</h2>
+                            <p class="text-gray-600 mb-4">
+                                The Air Quality Index (AQI) is an index for reporting daily air quality. It tells you how clean or polluted your air is, and what associated health effects might be a concern for you. The AQI focuses on health effects you may experience within a few hours or days after breathing polluted air.
+                            </p>
+                            <p class="text-gray-600 mb-6">
+                                Our AQI prediction model analyzes historical air quality data along with meteorological factors to forecast future AQI values with high accuracy. The model considers parameters like PM2.5, PM10, O3, NO2, SO2, CO, temperature, humidity, and wind speed.
+                            </p>
+                            
+                            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                                <h3 class="font-semibold text-blue-800 mb-2">Required CSV Format:</h3>
+                                <p class="text-sm text-blue-700 mb-2">Your CSV file should include the following columns (in any order):</p>
+                                <ul class="text-sm text-blue-700 list-disc pl-5">
+                                    <li>Date (YYYY-MM-DD format)</li>
+                                    <li>PM2.5 (µg/m³)</li>
+                                    <li>PM10 (µg/m³)</li>
+                                    <li>O3 (ppb)</li>
+                                    <li>NO2 (ppb)</li>
+                                    <li>SO2 (ppb)</li>
+                                    <li>CO (ppm)</li>
+                                    <li>Temperature (°C)</li>
+                                    <li>Humidity (%)</li>
+                                    <li>Wind Speed (km/h)</li>
+                                </ul>
+                            </div>
+
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                <label for="aqi-file-upload" class="file-input-label">
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                                    <span class="text-lg font-medium text-gray-700">Drag and drop your CSV file here</span>
+                                    <span class="mt-1 text-sm text-gray-500">or click to browse files</span>
+                                    <input id="aqi-file-upload" type="file" class="hidden" accept=".csv">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent AQI Trends</h2>
+                        <div class="chart-container mb-4">
+                            <canvas id="aqi-trend-chart"></canvas>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-semibold text-gray-800 mb-2">Key Observations:</h3>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>PM2.5 levels have increased by 12% compared to last month</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Ozone levels remain within safe limits despite temperature rise</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Wind patterns show improved dispersion of pollutants</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Display Section (initially hidden) -->
+                <div id="aqi-data-section" class="hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-semibold text-gray-800">Uploaded Air Quality Data</h2>
+                            <button id="aqi-analyze-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-150 ease-in-out">
+                                Analyze Data
+                                <i class="fas fa-chart-bar ml-2"></i>
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>PM2.5</th>
+                                        <th>PM10</th>
+                                        <th>O3</th>
+                                        <th>NO2</th>
+                                        <th>SO2</th>
+                                        <th>CO</th>
+                                        <th>Temp</th>
+                                        <th>Humidity</th>
+                                        <th>Wind</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="aqi-data-table">
+                                    <!-- Data will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section (initially hidden) -->
+                <div id="aqi-results-section" class="hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Analysis Results</h2>
+                        
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="font-semibold text-gray-800 mb-2">AQI Prediction</h3>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-4xl font-bold text-blue-600">78</p>
+                                        <p class="text-green-600 font-medium">Moderate</p>
+                                    </div>
+                                    <div class="bg-blue-100 p-3 rounded-full">
+                                        <i class="fas fa-wind text-blue-600 text-2xl"></i>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">Predicted average AQI for the next 7 days</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="font-semibold text-gray-800 mb-2">Primary Pollutant</h3>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-2xl font-bold text-gray-800">PM2.5</p>
+                                        <p class="text-sm text-gray-600">Particulate Matter &lt;2.5µm</p>
+                                    </div>
+                                    <div class="bg-yellow-100 p-3 rounded-full">
+                                        <i class="fas fa-exclamation-triangle text-yellow-600 text-2xl"></i>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">Contributes to 65% of pollution index</p>
+                            </div>
+                        </div>
+                        
+                        <h3 class="font-semibold text-gray-800 mb-3">Trend Analysis</h3>
+                        <div class="chart-container mb-6">
+                            <canvas id="aqi-analysis-chart"></canvas>
+                        </div>
+                        
+                        <h3 class="font-semibold text-gray-800 mb-3">Recommendations</h3>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <ul class="text-sm text-blue-700 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Limit outdoor activities during early morning hours when PM2.5 concentrations peak</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Consider using air purifiers indoors, especially in bedrooms</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Monitor local air quality alerts for potential deterioration in conditions</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WQI Page -->
+        <div id="wqi-page" class="page hidden">
+            <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Water Quality Index (WQI) Analysis</h1>
+                    <p class="text-lg text-gray-600">
+                        Upload your water quality data in CSV format to get detailed analysis and predictions.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div class="md:col-span-2">
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">About WQI</h2>
+                            <p class="text-gray-600 mb-4">
+                                The Water Quality Index (WQI) is a valuable tool for water quality assessment. It provides a single number (like a grade) that expresses overall water quality at a certain location and time based on several water quality parameters. The WQI considers parameters that affect water quality such as dissolved oxygen, pH, turbidity, dissolved solids, nitrates, and fecal coliform.
+                            </p>
+                            <p class="text-gray-600 mb-6">
+                                Our WQI prediction model analyzes historical water quality data along with environmental factors to forecast future WQI values with high accuracy. The model considers parameters like pH, dissolved oxygen (DO), biochemical oxygen demand (BOD), temperature, turbidity, total dissolved solids (TDS), nitrates, and fecal coliform.
+                            </p>
+                            
+                            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                                <h3 class="font-semibold text-blue-800 mb-2">Required CSV Format:</h3>
+                                <p class="text-sm text-blue-700 mb-2">Your CSV file should include the following columns (in any order):</p>
+                                <ul class="text-sm text-blue-700 list-disc pl-5">
+                                    <li>Date (YYYY-MM-DD format)</li>
+                                    <li>pH</li>
+                                    <li>Dissolved Oxygen (mg/L)</li>
+                                    <li>Biochemical Oxygen Demand (mg/L)</li>
+                                    <li>Temperature (°C)</li>
+                                    <li>Turbidity (NTU)</li>
+                                    <li>Total Dissolved Solids (mg/L)</li>
+                                    <li>Nitrates (mg/L)</li>
+                                    <li>Fecal Coliform (CFU/100mL)</li>
+                                    <li>Conductivity (µS/cm)</li>
+                                </ul>
+                            </div>
+
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                <label for="wqi-file-upload" class="file-input-label">
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                                    <span class="text-lg font-medium text-gray-700">Drag and drop your CSV file here</span>
+                                    <span class="mt-1 text-sm text-gray-500">or click to browse files</span>
+                                    <input id="wqi-file-upload" type="file" class="hidden" accept=".csv">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent WQI Trends</h2>
+                        <div class="chart-container mb-4">
+                            <canvas id="wqi-trend-chart"></canvas>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-semibold text-gray-800 mb-2">Key Observations:</h3>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Dissolved oxygen levels have improved by 8% this season</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>pH levels remain stable within optimal range</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Turbidity shows seasonal variation with rainfall patterns</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Display Section (initially hidden) -->
+                <div id="wqi-data-section" class="hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-semibold text-gray-800">Uploaded Water Quality Data</h2>
+                            <button id="wqi-analyze-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-150 ease-in-out">
+                                Analyze Data
+                                <i class="fas fa-chart-bar ml-2"></i>
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>pH</th>
+                                        <th>DO</th>
+                                        <th>BOD</th>
+                                        <th>Temp</th>
+                                        <th>Turbidity</th>
+                                        <th>TDS</th>
+                                        <th>Nitrates</th>
+                                        <th>F. Coliform</th>
+                                        <th>Conductivity</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wqi-data-table">
+                                    <!-- Data will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section (initially hidden) -->
+                <div id="wqi-results-section" class="hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Analysis Results</h2>
+                        
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="font-semibold text-gray-800 mb-2">WQI Prediction</h3>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-4xl font-bold text-blue-600">82</p>
+                                        <p class="text-green-600 font-medium">Good</p>
+                                    </div>
+                                    <div class="bg-blue-100 p-3 rounded-full">
+                                        <i class="fas fa-tint text-blue-600 text-2xl"></i>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">Predicted average WQI for the next 7 days</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="font-semibold text-gray-800 mb-2">Primary Concern</h3>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-2xl font-bold text-gray-800">Fecal Coliform</p>
+                                        <p class="text-sm text-gray-600">Bacterial contamination</p>
+                                    </div>
+                                    <div class="bg-yellow-100 p-3 rounded-full">
+                                        <i class="fas fa-exclamation-triangle text-yellow-600 text-2xl"></i>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">Levels exceed safety limits after rainfall</p>
+                            </div>
+                        </div>
+                        
+                        <h3 class="font-semibold text-gray-800 mb-3">Trend Analysis</h3>
+                        <div class="chart-container mb-6">
+                            <canvas id="wqi-analysis-chart"></canvas>
+                        </div>
+                        
+                        <h3 class="font-semibold text-gray-800 mb-3">Recommendations</h3>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <ul class="text-sm text-blue-700 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Implement additional filtration for bacterial removal</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Monitor water sources after heavy rainfall events</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                    <span>Consider UV treatment for drinking water sources</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Page -->
+        <div id="contact-page" class="page hidden">
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                        Contact Us
+                    </h1>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                        Have questions or feedback? We'd love to hear from you!
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <div class="bg-white p-8 rounded-lg shadow-md">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">Send us a message</h2>
+                            <form>
+                                <div class="mb-4">
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                    <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                    <input type="text" id="subject" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                                    <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out">
+                                    Send Message
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="bg-white p-8 rounded-lg shadow-md h-full">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">Our Information</h2>
+                            <div class="space-y-6">
+                                <div class="flex items-start">
+                                    <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-map-marker-alt text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800">Address</h3>
+                                        <p class="text-gray-600">123 Environmental Way, Suite 100<br>San Francisco, CA 94107</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="bg-green-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-phone-alt text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800">Phone</h3>
+                                        <p class="text-gray-600">+1 (555) 123-4567</p>
+                                        <p class="text-gray-600">Mon-Fri, 9am-5pm PST</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-envelope text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800">Email</h3>
+                                        <p class="text-gray-600">info@ecovision.com</p>
+                                        <p class="text-gray-600">support@ecovision.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-8">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-3">Follow Us</h3>
+                                <div class="flex space-x-4">
+                                    <a href="#" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition duration-150 ease-in-out">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition duration-150 ease-in-out">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="#" class="bg-pink-600 text-white p-3 rounded-full hover:bg-pink-700 transition duration-150 ease-in-out">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="#" class="bg-blue-700 text-white p-3 rounded-full hover:bg-blue-800 transition duration-150 ease-in-out">
+                                        <i class="fab fa-linkedin-in"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login/Register Page -->
+        <div id="login-page" class="page hidden">
+            <div class="max-w-md mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8">
+                    <i class="fas fa-leaf text-green-500 text-5xl mb-4"></i>
+                    <h1 class="text-3xl font-extrabold text-gray-900">
+                        Welcome to Ecovision
+                    </h1>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Sign in to access your environmental monitoring dashboard
+                    </p>
+                </div>
+
+                <div class="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
+                    <div class="mb-8">
+                        <ul class="flex border-b" id="auth-tabs">
+                            <li class="-mb-px mr-1">
+                                <a class="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold" href="#" id="login-tab">Login</a>
+                            </li>
+                            <li class="mr-1">
+                                <a class="bg-white inline-block py-2 px-4 text-gray-600 hover:text-blue-700 font-semibold" href="#" id="register-tab">Register</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form class="mb-0 space-y-6" id="login-form">
+                        <div>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700">Email address</label>
+                            <div class="mt-1">
+                                <input id="login-email" name="email" type="email" autocomplete="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <div class="mt-1">
+                                <input id="login-password" name="password" type="password" autocomplete="current-password" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+                                    Remember me
+                                </label>
+                            </div>
+
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                                    Forgot your password?
+                                </a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Sign in
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Register Form (hidden by default) -->
+                    <form class="mb-0 space-y-6 hidden" id="register-form">
+                        <div>
+                            <label for="register-name" class="block text-sm font-medium text-gray-700">Full name</label>
+                            <div class="mt-1">
+                                <input id="register-name" name="name" type="text" autocomplete="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="register-email" class="block text-sm font-medium text-gray-700">Email address</label>
+                            <div class="mt-1">
+                                <input id="register-email" name="email" type="email" autocomplete="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="register-password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <div class="mt-1">
+                                <input id="register-password" name="password" type="password" autocomplete="new-password" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="register-confirm-password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                            <div class="mt-1">
+                                <input id="register-confirm-password" name="confirm-password" type="password" autocomplete="new-password" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" required>
+                            <label for="terms" class="ml-2 block text-sm text-gray-700">
+                                I agree to the <a href="#" class="text-blue-600 hover:text-blue-500">Terms of Service</a> and <a href="#" class="text-blue-600 hover:text-blue-500">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-6">
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-gray-500">
+                                    Or continue with
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 grid grid-cols-3 gap-3">
+                            <div>
+                                <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fab fa-google text-red-500"></i>
+                                </a>
+                            </div>
+
+                            <div>
+                                <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fab fa-facebook-f text-blue-600"></i>
+                                </a>
+                            </div>
+
+                            <div>
+                                <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fab fa-twitter text-blue-400"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="col-span-2">
+                    <div class="flex items-center">
+                        <i class="fas fa-leaf text-green-400 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">Ecovision</span>
+                    </div>
+                    <p class="mt-4 text-gray-400 text-sm">
+                        Ecovision provides advanced environmental monitoring solutions to help protect our planet's air and water resources through data-driven insights.
+                    </p>
+                    <div class="mt-6 flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-300 tracking-wider uppercase">Solutions</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-base text-gray-400 hover:text-white">Air Quality</a></li>
+                        <li><a href="#" class="text-base text-gray-400 hover:text-white">Water Quality</a></li>
+                        <li><a href="#" class="text-base text-gray-400 hover:text-white">Predictive Models</a></li>
+                        <li><a href="#" class="text-base text-gray-400 hover:text-white">Data Analytics</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-300 tracking-wider uppercase">Company</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-base text-gray-400 hover:text-white">About</a></li>
+                        <li><a href="#" class="text-base text-gray-400 hover:text-white">Blog</a></li>
+                        <li><a href="#" class="text-base text-gray-400 hover:text-white">Careers</a></li>
+                        <li><a href="#" class="text-base text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between">
+                <p class="text-gray-400 text-sm">
+                    &copy; 2023 Ecovision. All rights reserved.
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Page Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Get all page elements
+            const pages = document.querySelectorAll('.page');
+            
+            // Show home page by default
+            document.getElementById('home-page').classList.remove('hidden');
+            
+            // Navigation click handlers
+            function navigateToPage(pageId) {
+                pages.forEach(page => page.classList.add('hidden'));
+                document.getElementById(pageId).classList.remove('hidden');
+                
+                // Update active nav link
+                const navLinks = document.querySelectorAll('nav a');
+                navLinks.forEach(link => {
+                    link.classList.remove('text-gray-900', 'border-blue-500');
+                    link.classList.add('text-gray-500', 'border-transparent');
+                });
+                
+                const activeLink = document.getElementById(`${pageId.replace('-page', '-link')}`);
+                if (activeLink) {
+                    activeLink.classList.remove('text-gray-500', 'border-transparent');
+                    activeLink.classList.add('text-gray-900', 'border-blue-500');
+                }
+                
+                // Update mobile menu active link
+                const mobileLinks = document.querySelectorAll('#mobile-menu a');
+                mobileLinks.forEach(link => {
+                    link.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-700');
+                    link.classList.add('border-transparent', 'text-gray-600');
+                });
+                
+                const mobileActiveLink = document.getElementById(`mobile-${pageId.replace('-page', '-link')}`);
+                if (mobileActiveLink) {
+                    mobileActiveLink.classList.remove('border-transparent', 'text-gray-600');
+                    mobileActiveLink.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-700');
+                }
+            }
+            
+            // Desktop nav links
+            document.getElementById('home-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('home-page');
+            });
+            
+            document.getElementById('aqi-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('aqi-page');
+                renderAqiCharts();
+            });
+            
+            document.getElementById('wqi-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('wqi-page');
+                renderWqiCharts();
+            });
+            
+            document.getElementById('contact-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('contact-page');
+            });
+            
+            document.getElementById('login-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('login-page');
+            });
+            
+            // Mobile nav links
+            document.getElementById('mobile-home-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('home-page');
+                mobileMenu.classList.add('hidden');
+            });
+            
+            document.getElementById('mobile-aqi-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('aqi-page');
+                mobileMenu.classList.add('hidden');
+                renderAqiCharts();
+            });
+            
+            document.getElementById('mobile-wqi-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('wqi-page');
+                mobileMenu.classList.add('hidden');
+                renderWqiCharts();
+            });
+            
+            document.getElementById('mobile-contact-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('contact-page');
+                mobileMenu.classList.add('hidden');
+            });
+            
+            document.getElementById('mobile-login-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateToPage('login-page');
+                mobileMenu.classList.add('hidden');
+            });
+            
+            // Login/Register tabs
+            document.getElementById('login-tab').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('login-form').classList.remove('hidden');
+                document.getElementById('register-form').classList.add('hidden');
+                document.getElementById('login-tab').classList.add('text-blue-700', 'border-l', 'border-t', 'border-r', 'rounded-t');
+                document.getElementById('login-tab').classList.remove('text-gray-600');
+                document.getElementById('register-tab').classList.remove('text-blue-700', 'border-l', 'border-t', 'border-r', 'rounded-t');
+                document.getElementById('register-tab').classList.add('text-gray-600');
+            });
+            
+            document.getElementById('register-tab').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('register-form').classList.remove('hidden');
+                document.getElementById('register-tab').classList.add('text-blue-700', 'border-l', 'border-t', 'border-r', 'rounded-t');
+                document.getElementById('register-tab').classList.remove('text-gray-600');
+                document.getElementById('login-tab').classList.remove('text-blue-700', 'border-l', 'border-t', 'border-r', 'rounded-t');
+                document.getElementById('login-tab').classList.add('text-gray-600');
+            });
+            
+            // File upload handlers
+            document.getElementById('aqi-file-upload').addEventListener('change', function(e) {
+                handleFileUpload(e, 'aqi');
+            });
+            
+            document.getElementById('wqi-file-upload').addEventListener('change', function(e) {
+                handleFileUpload(e, 'wqi');
+            });
+            
+            // Analyze buttons
+            document.getElementById('aqi-analyze-btn').addEventListener('click', function() {
+                document.getElementById('aqi-results-section').classList.remove('hidden');
+                renderAqiAnalysisChart();
+            });
+            
+            document.getElementById('wqi-analyze-btn').addEventListener('click', function() {
+                document.getElementById('wqi-results-section').classList.remove('hidden');
+                renderWqiAnalysisChart();
+            });
+            
+            // Render initial charts
+            renderAqiCharts();
+            renderWqiCharts();
+        });
+        
+        // File upload handler
+        function handleFileUpload(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const contents = e.target.result;
+                const lines = contents.split('\n');
+                const headers = lines[0].split(',');
+                const data = [];
+                
+                for (let i = 1; i < Math.min(lines.length, 6); i++) {
+                    if (lines[i].trim() === '') continue;
+                    const values = lines[i].split(',');
+                    const row = {};
+                    for (let j = 0; j < headers.length; j++) {
+                        row[headers[j].trim()] = values[j] ? values[j].trim() : '';
+                    }
+                    data.push(row);
+                }
+                
+                displayUploadedData(data, type);
+            };
+            reader.readAsText(file);
+        }
+        
+        // Display uploaded data in table
+        function displayUploadedData(data, type) {
+            const tableBody = document.getElementById(`${type}-data-table`);
+            tableBody.innerHTML = '';
+            
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                
+                for (const key in row) {
+                    const td = document.createElement('td');
+                    td.textContent = row[key];
+                    tr.appendChild(td);
+                }
+                
+                tableBody.appendChild(tr);
+            });
+            
+            document.getElementById(`${type}-data-section`).classList.remove('hidden');
+        }
+        
+        // Chart rendering functions
+        function renderAqiCharts() {
+            // AQI Trend Chart
+            const aqiTrendCtx = document.getElementById('aqi-trend-chart').getContext('2d');
+            new Chart(aqiTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'AQI',
+                        data: [65, 59, 80, 81, 56, 72],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderWqiCharts() {
+            // WQI Trend Chart
+            const wqiTrendCtx = document.getElementById('wqi-trend-chart').getContext('2d');
+            new Chart(wqiTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'WQI',
+                        data: [82, 78, 85, 79, 88, 83],
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 70,
+                            max: 90
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderAqiAnalysisChart() {
+            // AQI Analysis Chart
+            const aqiAnalysisCtx = document.getElementById('aqi-analysis-chart').getContext('2d');
+            new Chart(aqiAnalysisCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['PM2.5', 'PM10', 'O3', 'NO2', 'SO2', 'CO'],
+                    datasets: [{
+                        label: 'Pollutant Levels',
+                        data: [45, 30, 20, 15, 10, 5],
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(249, 115, 22, 0.7)',
+                            'rgba(234, 179, 8, 0.7)',
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(139, 92, 246, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(239, 68, 68, 1)',
+                            'rgba(249, 115, 22, 1)',
+                            'rgba(234, 179, 8, 1)',
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(139, 92, 246, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Concentration (µg/m³)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderWqiAnalysisChart() {
+            // WQI Analysis Chart
+            const wqiAnalysisCtx = document.getElementById('wqi-analysis-chart').getContext('2d');
+            new Chart(wqiAnalysisCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['pH', 'DO', 'BOD', 'Turbidity', 'TDS', 'Nitrates', 'F. Coliform'],
+                    datasets: [{
+                        label: 'Parameter Levels',
+                        data: [7.2, 8.5, 3.2, 5.8, 250, 2.1, 120],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: 'Ideal Levels',
+                        data: [7, 8, 2, 5, 200, 1, 50],
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
