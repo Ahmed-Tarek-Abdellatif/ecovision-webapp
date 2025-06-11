@@ -42,7 +42,7 @@ const Login = () => {
             width="350px"
             height="450px"
             position="relative"
-            path="src\assets\Login.jpg"
+            path="src\assets\Login.png"
             alt="Header Image"
             style={{
               border: "1px solid ",

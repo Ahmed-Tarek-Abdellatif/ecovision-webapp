@@ -2,6 +2,7 @@ import React from "react";
 import "../App.css";
 import Card from "../components/Card";
 import FAQItem from "../components/FAQ";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   return (
@@ -57,54 +58,60 @@ function HomePage() {
           </p>
         </div>
         <div className="services-cards">
-          <Card
-            width="200px"
-            height="300px"
-            position="relative"
-            path="src\assets\Page 1\AirCard.jpg"
-            alt="Air Quality Card"
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              boxShadow: "0 6px 8px rgba(0, 0, 0, 0.2)",
-            }}
-            marginTop="20px"
-            marginBottom="20px"
-            marginLeft="10px"
-            marginRight="10px"
-          />
-          <Card
-            width="200px"
-            height="300px"
-            position="relative"
-            path="src\assets\Page 1\WaterCard.jpg"
-            alt="Water Quality Card"
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              boxShadow: "0 6px 8px rgba(0, 0, 0, 0.2)",
-            }}
-            marginTop="20px"
-            marginBottom="20px"
-            marginLeft="10px"
-            marginRight="10px"
-          />
-          <Card
-            width="200px"
-            height="300px"
-            position=""
-            path="src\assets\Page 1\GreenSolutionCard.jpg"
-            alt="Green Land Card"
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              boxShadow: "0 6px 8px rgba(0, 0, 0, 0.2)",
-            }}
-            marginTop="20px"
-            marginBottom="20px"
-            marginLeft="10px"
-            marginRight="10px"
-          />
+          <Link to="/aqi" style={{ textDecoration: "none" }}>
+            <Card
+              width="200px"
+              height="300px"
+              position="relative"
+              path="src\assets\Page 1\AirCard.jpg"
+              alt="Air Quality Card"
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                boxShadow: "0 6px 8px rgba(0, 0, 0, 0.2)",
+              }}
+              marginTop="20px"
+              marginBottom="20px"
+              marginLeft="10px"
+              marginRight="10px"
+            />
+          </Link>
+          <Link to="/wqi" style={{ textDecoration: "none" }}>
+            <Card
+              width="200px"
+              height="300px"
+              position="relative"
+              path="src\assets\Page 1\WaterCard.jpg"
+              alt="Water Quality Card"
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                boxShadow: "0 6px 8px rgba(0, 0, 0, 0.2)",
+              }}
+              marginTop="20px"
+              marginBottom="20px"
+              marginLeft="10px"
+              marginRight="10px"
+            />
+          </Link>
+          <Link to="/aqi" style={{ textDecoration: "none" }}>
+            <Card
+              width="200px"
+              height="300px"
+              position=""
+              path="src\assets\Page 1\GreenSolutionCard.jpg"
+              alt="Green Land Card"
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                boxShadow: "0 6px 8px rgba(0, 0, 0, 0.2)",
+              }}
+              marginTop="20px"
+              marginBottom="20px"
+              marginLeft="10px"
+              marginRight="10px"
+            />
+          </Link>
         </div>
       </div>
       <div className="faq-section">

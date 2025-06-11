@@ -236,6 +236,18 @@ hr {
   background-color: #ffffff;
   border-radius: 4px;
 }
+
+/* FAQ answer animation */
+.faq-answer-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+.faq-answer-wrapper.open {
+  opacity: 1;
+  max-height: 500px; /* Large enough for most answers */
+}
 /*#endregion */
 
 /*#region Upload */
@@ -270,7 +282,7 @@ hr {
 }
 
 .data-table thead tr {
-  background-color: #3b82f6;
+  background-color:  rgb(31 41 55);;
 
   color: #ffffff;
   text-align: left;
@@ -297,7 +309,7 @@ hr {
 /*#region Buttons */
 .contact-btn,
 .upload-button {
-  background: #000000;
+  background: rgb(31 41 55);
   color: white;
   padding: 8px 20px;
   border-radius: 15px;
@@ -322,6 +334,7 @@ hr {
 }
 
 .upload-button {
+  background: rgb(31 41 55);
   padding: 10px 20px;
   margin: 10px;
   border-radius: 5px;
@@ -379,8 +392,8 @@ hr {
 }
 
 .upload-button {
-  background: #ffffff; /* White background */
-  color: #000000; /* Black text */
+  background: rgb(31 41 55);; /* White background */
+  color: #FFFF; /* Black text */
   padding: 10px 20px;
   border-radius: 5px;
   font-size: 16px;

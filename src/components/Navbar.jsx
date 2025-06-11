@@ -4,6 +4,14 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import "../App.css";
 
 function Navbarr() {
+  const isLoggedIn = !!localStorage.getItem("accessToken");
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    window.location.href = "/login";
+  };
+
   return (
     <Navbar expand="lg" className="custom-navbar" fixed="top">
       <Container>
@@ -18,14 +26,14 @@ function Navbarr() {
         </div>
 
         <Nav className="navbar-links mx-auto">
-          <NavLink to="/" className="nav-link active">
+          <NavLink to="/" className="nav-link">
             Home
           </NavLink>
           <NavLink to="/aqi" className="nav-link">
-            Air Quality (AQI)
+            Air Quality Index (AQI)
           </NavLink>
           <NavLink to="/wqi" className="nav-link">
-            Water Quality (WQI)
+            Water Quality Index (WQI)
           </NavLink>
           <NavLink
             to="https://docs.google.com/document/d/1J-6mRalaMcgo4ir5gT7oSHkPmytGK4uv0MjuuPoOEoo/edit?usp=sharing"
@@ -39,9 +47,25 @@ function Navbarr() {
           CONTACT
         </a>
 
-        <NavLink to="/login" className="nav-link">
-          Login / Register
-        </NavLink>
+        {isLoggedIn ? (
+          <button
+            onClick={handleLogout}
+            className="nav-link"
+            style={{
+              background: "none",
+              border: "none",
+              color: "inherit",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            Logout
+          </button>
+        ) : (
+          <NavLink to="/login" className="nav-link">
+            Login
+          </NavLink>
+        )}
       </Container>
     </Navbar>
   );

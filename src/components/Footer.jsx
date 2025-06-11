@@ -25,7 +25,7 @@ const Footer = () => {
               <a href="mailto:bixbytv1.0@gmail.com">bixbytv1.0@gmail.com</a>
             </div>
             <div className="contact-item">
-              <FaPhone className="me-2" />
+              <FaPhone className="me-2" style={{ transform: 'scaleX(-1)' }} />
               <a href="tel:01121015980">0112 101 5980</a>
             </div>
           </div>
