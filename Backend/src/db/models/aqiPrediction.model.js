@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-const aqiPredictionSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  filename: String,
-  predictions: Object,
-  createdAt: { type: Date, default: Date.now }
+const AQIPredictionSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  predictions: { type: [Object], required: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
-export const AQIPrediction = mongoose.model("AQIPrediction", aqiPredictionSchema);
+export const AQIPrediction = mongoose.model("AQIPrediction", AQIPredictionSchema);
+ 

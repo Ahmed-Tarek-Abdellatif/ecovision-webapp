@@ -5,8 +5,8 @@ import userRouter from "./modules/user/user.controller.js"
 import { globalError } from "./utils/errors/global.error.js";
 import { notFound } from "./utils/errors/not-found.js";
 import adminRouter from "./modules/admin/admin.controller.js"
-import predictRoutes from "./modules/predict/predict.controller.js";
-import aqiRoutes from "./modules/aqi/aqi.controller.js";
+import wqiRouter from "./modules/wqi/wqi.routes.js";
+import aqiRoutes from "./modules/aqi/aqi.routes.js"
 
 import {rateLimit} from "express-rate-limit"
 const bootstrap=async (app,express)=>{
@@ -32,8 +32,8 @@ app.use("/auth",authRouter)
 app.use("/user",userRouter)
 app.use("/admin",adminRouter)
 
-app.use("/api/predict", predictRoutes);
-app.use("/aqi/predict", aqiRoutes);
+app.use("/api/wqi", wqiRouter);
+app.use("/api/aqi", aqiRoutes);
 
 
 

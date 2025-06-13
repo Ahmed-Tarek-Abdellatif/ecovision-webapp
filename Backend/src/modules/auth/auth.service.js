@@ -29,8 +29,7 @@ export const login=asyncHandler(async(req,res,next)=>{
     const{email,password}=req.body
 
     const userExist=await User.findOne({email})
-    console.log("Email received:", email);
-    console.log("Password received:", password);
+
     if(!userExist){
         return next(new Error('user not exist',{cause:404}))
     }

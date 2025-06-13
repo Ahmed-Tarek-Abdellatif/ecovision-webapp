@@ -9,7 +9,7 @@ try {
 if(!authorization)
  return res.status(400).json({message:"required  token"})
 if(!authorization.startsWith("Bearer"))
- return res.status(500).json({message:"invalid Bearer"});
+ return res.status(500).json({message:"invalid berror"});
   const token = authorization.split(" ")[1];
     if (!token) {
         return res.status(400).json({ message: "JWT must be provided" });
