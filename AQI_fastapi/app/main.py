@@ -95,8 +95,9 @@ async def predict_from_csv(
         for gas in gases:
             try:
                 features = get_feature_names(gas)
-                X_row = row[features].values.reshape(1, -1)
-                X_scaled = scalers[gas].transform(X_row)
+                # Pass DataFrame with feature names to scaler to avoid warning
+                X_row_df = pd.DataFrame([row[features].values], columns=features)
+                X_scaled = scalers[gas].transform(X_row_df)
                 pred = models[gas].predict(X_scaled)[0]
 
                 # Inverse log1p and clamp to non-negative
@@ -116,3 +117,5 @@ async def predict_from_csv(
         results.append(row_result)
 
     return JSONResponse(content={"results": results})
+
+#uvicorn app.main:app --port 8080 --reload
