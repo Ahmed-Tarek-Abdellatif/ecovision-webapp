@@ -1,12 +1,7 @@
 import Papa from 'papaparse';
 import axios from 'axios';
-import { HandleDataColCheckboxProps, HandleDataColumnsChangeProps, HandleDownloadProps, HandleFileChangeProps, HandlePredColCheckboxProps, HandlePredColumnsChangeProps, HandleUploadProps } from '../Interface/Interface';
+import { HandleDataColCheckboxProps, HandleDataColumnsChangeProps, HandleDownloadProps, HandlePredColCheckboxProps, HandlePredColumnsChangeProps, HandleUploadProps } from '../Interface/Interface';
 
-export const handleFileChange = ({ event, setFile }: HandleFileChangeProps) => {
-  if (event.target.files) {
-    setFile(event.target.files[0]);
-  }
-};
 
 export const handleUpload = async ({ file, setLoading, setError, setData, setPredictions } : HandleUploadProps) => {
   if (!file) {

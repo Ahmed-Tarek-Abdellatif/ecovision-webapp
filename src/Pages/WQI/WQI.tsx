@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import Card from '../../Public Components/Card';
 import '../../App.css';
-import { handleDownload, handleFileChange, handleUpload } from './Functions/Functions';
+import { handleDownload} from './Functions/Functions';
 import Table from '../../Public Components/Table';
-
+import Header from '../../Public Components/Header';
+import Grid from '../../Public Components/Grid';
+import Upload from '../../Public Components/Upload';
 
 function WQI() {
   const [file, setFile] = useState<File | null>(null);
@@ -27,148 +29,34 @@ function WQI() {
   const displayPredColumns = selectedPredColumns.length > 0 ? selectedPredColumns : allPredColumns.slice(0, 5);
   const ranges = ['90-100', '70-90', '50-70', '25-50', '0-25'];
 
-  const classification = [
-    "Excellent",
-    "Good",
-    "Medium",
-    "Bad",
-    "Very Bad",
-  ]
-
+  const classification = ['Excellent', 'Good', 'Medium', 'Bad', 'Very Bad'];
+  const columns = [
+    'Date',
+    'pH',
+    'Dissolved Oxygen (DO)',
+    'Biochemical Oxygen Demand (BOD)',
+    'Temperature',
+    'Turbidity',
+    'Total Dissolved Solids (TDS)',
+    'Nitrates',
+    'Fecal Coliform',
+    'Conductivity',
+  ];
   function handlePredColCheckbox(col: string): void {
     throw new Error('Function not implemented.');
   }
 
   return (
     <div className="home-container">
-      <div
-        className="home-header"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-        }}
-      >
-        <div className="content" style={{ flex: 1 }}>
-          <h1>Aiming for a Better Future</h1>
-          <p>
-            Join us in creating sustainable cities where clean water drive healthier communities. Together, we can build
-            a future that thrives in harmony with nature.
-          </p>
-        </div>
-        <div
-          style={{
-            flex: '0 0 320px',
-            marginLeft: '40px',
-            display: 'flex',
-            alignItems: 'center',
-            marginTop: '70px',
-          }}
-        >
-          <Card
-            width="300px"
-            height="400px"
-            position="relative"
-            path="src\assets\Page 1\WaterCard.jpg"
-            alt="Header Image"
-            style={{
-              border: '1px solid ',
-              borderRadius: '8px',
-              boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)',
-              marginLeft: '0',
-            }}
-          />
-        </div>
-      </div>
-     <Table fullName={'Water Quality Index'} name={'WQI'} ranges={ranges} classification={classification}></Table>
-      <div style={{ width: '100%', overflowX: 'auto', marginBottom: '20px' }}>
-        <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>Date</th>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>pH</th>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>Dissolved Oxygen (DO)</th>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>Biochemical Oxygen Demand (BOD)</th>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>Temperature</th>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>Turbidity</th>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>Total Dissolved Solids (TDS)</th>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>Nitrates</th>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>Fecal Coliform</th>
-              <th style={{ padding: '8px', fontWeight: 'bold' }}>Conductivity</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
-        <input
-          type="file"
-          accept=".csv"
-          onChange={(event) => handleFileChange({ event, setFile })}
-          style={{ display: 'none' }}
-          id="file-upload"
-        />
-        <label
-          htmlFor="file-upload"
-          className="file-input-label"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '2rem',
-            border: '2px dashed #d1d5db',
-            borderRadius: '0.5rem',
-            cursor: 'pointer',
-            transition: 'all 0.3s',
-            width: '100%',
-            maxWidth: '400px',
-            margin: '0 auto 16px auto',
-            background: '#fff',
-          }}
-          onDragOver={(e) => {
-            e.preventDefault();
-            e.currentTarget.style.borderColor = '#3b82f6';
-            e.currentTarget.style.background = '#f0f9ff';
-          }}
-          onDragLeave={(e) => {
-            e.preventDefault();
-            e.currentTarget.style.borderColor = '#d1d5db';
-            e.currentTarget.style.background = '#fff';
-          }}
-          onDrop={(e) => {
-            e.preventDefault();
-            e.currentTarget.style.borderColor = '#d1d5db';
-            e.currentTarget.style.background = '#fff';
-            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-              setFile(e.dataTransfer.files[0]);
-            }
-          }}
-        >
-          <i
-            className="fas fa-cloud-upload-alt"
-            style={{ fontSize: '2.5rem', color: '#3b82f6', marginBottom: '0.5rem' }}
-          ></i>
-          <span style={{ fontWeight: 500, color: '#374151' }}>
-            Drag & drop your CSV file here, or{' '}
-            <span style={{ color: '#3b82f6', textDecoration: 'underline' }}>browse</span>
-          </span>
-          <span style={{ fontSize: '0.9rem', color: '#6b7280', marginTop: '0.5rem' }}>
-            Only .csv files are supported
-          </span>
-          {file && (
-            <span style={{ marginTop: '0.75rem', color: '#059669', fontWeight: 500 }}>Selected: {file.name}</span>
-          )}
-        </label>
-        <button
-          onClick={() => handleUpload({ file, setLoading, setError, setData, setPredictions })}
-          className="upload-button"
-          style={{ marginTop: '8px' }}
-        >
-          Upload
-        </button>
-      </div>
-
+      <Header
+        header={'Aiming for a Better Future'}
+        details={
+          'Join us in creating sustainable cities where clean water drive healthier communities. Together, we can build a future that thrives in harmony with nature.'
+        }
+      ></Header>
+      <Table fullName={'Water Quality Index'} name={'WQI'} ranges={ranges} classification={classification}></Table>
+      <Grid columns={columns}></Grid>
+      <Upload file={file}  setFile={setFile} setData={setData}></Upload>
       {loading && <p>Loading predictions...</p>}
       {error && <p className="error-message">{error}</p>}
 
