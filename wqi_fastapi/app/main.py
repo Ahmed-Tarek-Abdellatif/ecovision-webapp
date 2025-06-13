@@ -115,3 +115,5 @@ async def predict_wqi_smart(
         results.append(row_result)
 
     return JSONResponse(content={"results": results})
+
+#uvicorn app.main:app --host 0.0.0.0 --port 8070 --reload
