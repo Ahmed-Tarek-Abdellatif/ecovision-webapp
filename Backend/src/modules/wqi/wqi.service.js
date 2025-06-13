@@ -15,9 +15,21 @@ export const handleWQIUpload = async (req, res) => {
   }
 
   const filePath = req.file.path;
+  // Log CSV file headers and shape for debugging
+  try {
+    const csvContent = fs.readFileSync(filePath, 'utf8');
+    const lines = csvContent.split(/\r?\n/).filter(Boolean);
+    const headers = lines[0]?.split(',') || [];
+    console.log("[WQI] Uploaded CSV headers:", headers);
+    console.log(`[WQI] CSV row count (excluding header): ${lines.length - 1}`);
+  } catch (csvErr) {
+    console.warn("[WQI] Could not read/parse uploaded CSV for debug:", csvErr);
+  }
+
   const form = new FormData();
   form.append("file", fs.createReadStream(filePath));
   form.append("start_date", req.body.start_date || new Date().toISOString());
+  if (req.body.end_date) form.append("end_date", req.body.end_date);
 
   try {
     const response = await axios.post("http://localhost:8070/predict-wqi-smart", form, {
@@ -40,8 +52,25 @@ export const handleWQIUpload = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("WQI service error:", err.message);
-    return res.status(500).json({ error: "Prediction failed", details: err.message });
+    // Improved error logging
+    console.error("[WQI] Prediction error:", err);
+    if (err.response) {
+      // Axios error with response from FastAPI
+      console.error("[WQI] FastAPI response data:", err.response.data);
+      console.error("[WQI] FastAPI response status:", err.response.status);
+      console.error("[WQI] FastAPI response headers:", err.response.headers);
+    }
+    // Return detailed error info to frontend for debugging
+    return res.status(500).json({
+      error: "Prediction failed",
+      details: err.message,
+      stack: err.stack,
+      fastapi: err.response ? {
+        data: err.response.data,
+        status: err.response.status,
+        headers: err.response.headers
+      } : undefined
+    });
   } finally {
     fs.unlink(filePath, () => {});
   }

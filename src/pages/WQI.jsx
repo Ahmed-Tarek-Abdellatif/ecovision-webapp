@@ -10,113 +10,104 @@ function WQI() {
   const [predictions, setPredictions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // New: Column selection state
+  // Column selection state for data and predictions
   const [selectedDataColumns, setSelectedDataColumns] = useState([]);
-  const [selectedPredColumns, setSelectedPredColumns] = useState([]);
-  // Row count selection state
-  // const [dataRowCount, setDataRowCount] = useState(5);
-  // const [predRowCount, setPredRowCount] = useState(5);
-  // Dropdown open/close state
   const [showDataColDropdown, setShowDataColDropdown] = useState(false);
+  const [selectedPredColumns, setSelectedPredColumns] = useState([]);
   const [showPredColDropdown, setShowPredColDropdown] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewHover, setPreviewHover] = useState(false);
+  const [selectedPreviewColumns, setSelectedPreviewColumns] = useState([]);
+  const [showPreviewColDropdown, setShowPreviewColDropdown] = useState(false);
 
+  // Helper: Get all possible columns from data/predictions
+  const allDataColumns = React.useMemo(() => (data.length > 0 ? Object.keys(data[0]) : []), [data]);
+  const displayDataColumns = selectedDataColumns.length > 0 ? selectedDataColumns : allDataColumns.slice(0, 5);
+  const allPredColumns = React.useMemo(() => (predictions.length > 0 ? Object.keys(predictions[0]) : []), [predictions]);
+  const displayPredColumns = selectedPredColumns.length > 0 ? selectedPredColumns : allPredColumns.slice(0, 5);
+
+  // File change handler
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
 
+  // File preview handler (like AQI)
+  const handleFilePreview = () => {
+    if (!file) return;
+    setShowPreview((prev) => {
+      if (!prev) {
+        Papa.parse(file, {
+          complete: (result) => {
+            const rows = result.data;
+            if (rows.length > 19) {
+              setData(rows.slice(0, 20));
+            } else {
+              setData(rows);
+            }
+          },
+          header: true,
+        });
+      }
+      return !prev;
+    });
+  };
+
+  // Upload handler (connect to backend)
   const handleUpload = async () => {
     if (!file) {
       alert("Please select a file first.");
       return;
     }
-
+    if (!startDate) {
+      alert("Please select a start date.");
+      return;
+    }
     setLoading(true);
     setError(null);
-
-    // Parse the CSV file to display the first few rows in the frontend
-    Papa.parse(file, {
-      complete: (result) => {
-        const rows = result.data;
-        if (rows.length > 19) {
-          setData(rows.slice(0, 20)); // Limit to first 20 rows
-        } else {
-          setData(rows);
-        }
-      },
-      header: true,
-    });
-
-    // Retrieve the access token from localStorage
     const token = localStorage.getItem("accessToken");
-
     if (!token) {
       setError("Authentication required. Please log in.");
       setLoading(false);
       return;
     }
-
-    // Create FormData to send the file to the backend for prediction
     const formData = new FormData();
     formData.append("file", file);
-
+    formData.append("start_date", startDate);
+    if (endDate) formData.append("end_date", endDate);
     try {
-      // Sending the file to backend with the token in the headers
-      const response = await axios.post("http://localhost:3000/api/predict/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",  // Ensuring it's sent as multipart/form-data
-          "Authorization": `Bearer ${token}`,    // Add the token here in the Authorization header
-        },
-      });
-
-      // Handle the response containing predictions
-      setPredictions(response.data.predictions);
+      const response = await axios.post(
+        "http://localhost:3000/api/wqi/predict",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      );
+      setPredictions(response.data.predictions || response.data.savedToDB?.predictions || []);
     } catch (err) {
-      setError("Failed to upload or predict. Please try again.");
-      console.error("Error response:", err.response);
+      let backendMsg = "";
+      if (err?.response?.data?.details) {
+        backendMsg = typeof err.response.data.details === "object" ? JSON.stringify(err.response.data.details) : err.response.data.details;
+      } else if (err?.response?.data?.message) {
+        backendMsg = err.response.data.message;
+      } else if (err?.response?.data?.error) {
+        backendMsg = err.response.data.error;
+      } else if (err?.response?.data) {
+        backendMsg = JSON.stringify(err.response.data);
+      } else {
+        backendMsg = err?.message || "";
+      }
+      setError("Failed to upload or predict. " + backendMsg);
     } finally {
       setLoading(false);
     }
   };
 
-  // Function to download predictions as CSV with structured columns
-  const handleDownload = () => {
-    const predictionData = [];
-
-    // Add headers from the predictions object
-    const headers = Object.keys(predictions[0] || {});
-    predictionData.push(headers);
-
-    // Create rows for each prediction set
-    predictions.forEach((row) => {
-      const rowData = headers.map((header) => row[header]);
-      predictionData.push(rowData);
-    });
-
-    const csv = Papa.unparse(predictionData);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", "predictions.csv");
-    link.click();
-  };
-
-  // Helper: Get all possible columns from uploaded data or predictions
-  const allDataColumns = React.useMemo(() => (data.length > 0 ? Object.keys(data[0]) : []), [data]);
-  const allPredColumns = React.useMemo(() => (predictions.length > 0 ? Object.keys(predictions[0]) : []), [predictions]);
-
-  // Handlers for dropdown selection
-  const handleDataColumnsChange = (e) => {
-    const options = Array.from(e.target.selectedOptions).map((o) => o.value);
-    setSelectedDataColumns(options.slice(0, 5));
-  };
-  const handlePredColumnsChange = (e) => {
-    const options = Array.from(e.target.selectedOptions).map((o) => o.value);
-    setSelectedPredColumns(options.slice(0, 5));
-  };
-
-  // Handlers for checkbox selection in dropdown
+  // Checkbox handlers for column dropdowns
   const handleDataColCheckbox = (col) => {
     setSelectedDataColumns((prev) => {
       if (prev.includes(col)) return prev.filter((c) => c !== col);
@@ -132,9 +123,24 @@ function WQI() {
     });
   };
 
-  // Columns to display (default: first 5 if none selected)
-  const displayDataColumns = selectedDataColumns.length > 0 ? selectedDataColumns : allDataColumns.slice(0, 5);
-  const displayPredColumns = selectedPredColumns.length > 0 ? selectedPredColumns : allPredColumns.slice(0, 5);
+  // Download predictions as CSV
+  const handleDownload = () => {
+    const csvRows = [];
+    csvRows.push(displayPredColumns.join(","));
+    predictions.forEach(row => {
+      csvRows.push(displayPredColumns.map(col => JSON.stringify(row[col] ?? "")).join(","));
+    });
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "wqi_predictions.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="home-container">
@@ -232,8 +238,30 @@ function WQI() {
         </table>
       </div>
 
-      {/* Drag and Drop Upload Section */}
+      {/* Upload controls (like AQI) */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "24px" }}>
+        <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
+          <div>
+            <label htmlFor="start-date" style={{ fontWeight: 500, marginRight: 8 }}>Start Date:</label>
+            <input
+              type="date"
+              id="start-date"
+              value={startDate}
+              onChange={e => setStartDate(e.target.value)}
+              style={{ padding: 6, borderRadius: 4, border: "1px solid #d1d5db" }}
+            />
+          </div>
+          <div>
+            <label htmlFor="end-date" style={{ fontWeight: 500, marginRight: 8 }}>End Date:</label>
+            <input
+              type="date"
+              id="end-date"
+              value={endDate}
+              onChange={e => setEndDate(e.target.value)}
+              style={{ padding: 6, borderRadius: 4, border: "1px solid #d1d5db" }}
+            />
+          </div>
+        </div>
         <input
           type="file"
           accept=".csv"
@@ -283,85 +311,102 @@ function WQI() {
             </span>
           )}
         </label>
-        <button onClick={handleUpload} className="upload-button" style={{ marginTop: "8px" }}>
-          Upload
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={handleUpload} className="upload-button" style={{ marginTop: "8px" }}>
+            Upload
+          </button>
+          {file && (
+            <button
+              onClick={handleFilePreview}
+              className="upload-button"
+              style={{
+                marginTop: "8px",
+                background: previewHover ? '#2563eb' : '#e0e7ff',
+                color: previewHover ? '#fff' : '#1e40af',
+                transition: 'background 0.2s, color 0.2s'
+              }}
+              onMouseEnter={() => setPreviewHover(true)}
+              onMouseLeave={() => setPreviewHover(false)}
+            >
+              {showPreview ? 'Close Preview' : 'Preview CSV'}
+            </button>
+          )}
+        </div>
+        {/* CSV Preview Table with column dropdown */}
+        {showPreview && data.length > 0 && (
+          <div className="table-section">
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
+              <h4 style={{ marginBottom: 8, marginLeft: 35 }}>CSV Preview (first 10 rows):</h4>
+              {/* ColumnDropdown for preview table */}
+              {data.length > 0 && (
+                <div style={{ position: 'relative', marginLeft: 16 }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowPreviewColDropdown(v => !v)}
+                    className="upload-button"
+                    style={{ minWidth: 180, textAlign: "left", background: "#fff", color: "#111827", border: "1px solid #d1d5db", borderRadius: 4, cursor: "pointer", position: "relative" }}
+                  >
+                    <span style={{ color: selectedPreviewColumns.length === 0 ? '#6b7280' : '#111827', fontWeight: 500 }}>
+                      {selectedPreviewColumns.length > 0
+                        ? `Columns: ${selectedPreviewColumns.join(', ')}`
+                        : 'Select columns (1-5)'}
+                    </span>
+                  </button>
+                  {showPreviewColDropdown && (
+                    <div style={{ position: "absolute", zIndex: 10, background: "#fff", border: "1px solid #d1d5db", borderRadius: 4, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", padding: 8, minWidth: 180, marginTop: 4 }}>
+                      <div style={{ fontWeight: 500, marginBottom: 6, color: '#2563eb' }}>Select columns to display</div>
+                      {Object.keys(data[0]).map(col => (
+                        <label key={col} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                          <input
+                            type="checkbox"
+                            checked={selectedPreviewColumns.includes(col)}
+                            onChange={() => {
+                              setSelectedPreviewColumns(prev => {
+                                if (prev.includes(col)) return prev.filter(c => c !== col);
+                                if (prev.length < 5) return [...prev, col];
+                                return prev;
+                              });
+                            }}
+                            disabled={
+                              (!selectedPreviewColumns.includes(col) && selectedPreviewColumns.length >= 5) ||
+                              (selectedPreviewColumns.length === 1 && selectedPreviewColumns.includes(col))
+                            }
+                          />
+                          <span>{col}</span>
+                        </label>
+                      ))}
+                      <button type="button" onClick={() => setShowPreviewColDropdown(false)} style={{ marginTop: 8, padding: "4px 12px", border: "none", background: "#3b82f6", color: "#fff", borderRadius: 3, cursor: "pointer" }}>Close</button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="table-responsive">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    {(selectedPreviewColumns.length > 0 ? selectedPreviewColumns : Object.keys(data[0]).slice(0, 5)).map((col, i) => (
+                      <th key={i}>{col}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.slice(0, 10).map((row, idx) => (
+                    <tr key={idx}>
+                      {(selectedPreviewColumns.length > 0 ? selectedPreviewColumns : Object.keys(data[0]).slice(0, 5)).map((col, i) => (
+                        <td key={i}>{row[col]}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
 
       {loading && <p>Loading predictions...</p>}
       {error && <p className="error-message">{error}</p>}
-
-      {data.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', width: '100%' }}>
-          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: displayDataColumns.length === 1 ? 180 : '100%', marginLeft: 35, marginBottom: 20 }}>
-            <h3 style={{ margin: 0, marginRight: 16 }}>Uploaded Data</h3>
-            {allDataColumns.length > 0 && (
-              <div style={{ position: 'relative', marginLeft: 0 }}>
-                <button
-                  type="button"
-                  onClick={() => setShowDataColDropdown(v => !v)}
-                  style={{
-                    padding: "6px 16px",
-                    border: "1px solid #d1d5db",
-                    borderRadius: 4,
-                    background: "#fff",
-                    cursor: "pointer",
-                    minWidth: 180,
-                    textAlign: "left",
-                    position: "relative"
-                  }}
-                >
-                  <span style={{ color: selectedDataColumns.length === 0 ? '#6b7280' : '#111827', fontWeight: 500 }}>
-                    {selectedDataColumns.length > 0
-                      ? `Columns: ${selectedDataColumns.join(', ')}`
-                      : 'Select columns (1-5)'}
-                  </span>
-                </button>
-                {showDataColDropdown && (
-                  <div style={{ position: "absolute", zIndex: 10, background: "#fff", border: "1px solid #d1d5db", borderRadius: 4, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", padding: 8, minWidth: 180, marginTop: 4 }}>
-                    <div style={{ fontWeight: 500, marginBottom: 6, color: '#2563eb' }}>Select columns to display</div>
-                    {allDataColumns.map(col => (
-                      <label key={col} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                        <input
-                          type="checkbox"
-                          checked={selectedDataColumns.includes(col)}
-                          onChange={() => handleDataColCheckbox(col)}
-                          disabled={
-                            (!selectedDataColumns.includes(col) && selectedDataColumns.length >= 5) ||
-                            (selectedDataColumns.length === 1 && selectedDataColumns.includes(col))
-                          }
-                        />
-                        <span>{col}</span>
-                      </label>
-                    ))}
-                    <button type="button" onClick={() => setShowDataColDropdown(false)} style={{ marginTop: 8, padding: "4px 12px", border: "none", background: "#3b82f6", color: "#fff", borderRadius: 3, cursor: "pointer" }}>Close</button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-          <div style={{ width: displayDataColumns.length === 1 ? 180 : '100%', overflowX: 'auto', display: 'flex', justifyContent: 'center' }}>
-            <table className="data-table" style={{ width: displayDataColumns.length === 1 ? 180 : '100%', minWidth: 0, tableLayout: displayDataColumns.length === 1 ? 'fixed' : 'auto', margin: '0 auto' }}>
-              <thead>
-                <tr>
-                  {displayDataColumns.map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.slice(0, 5).map((row, index) => (
-                  <tr key={index}>
-                    {displayDataColumns.map((key, i) => (
-                      <td key={i}>{row[key]}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
 
       {/* Column dropdown for Predictions */}
       {allPredColumns.length > 0 && predictions.length > 0 && (
