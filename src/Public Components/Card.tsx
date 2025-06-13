@@ -1,4 +1,5 @@
 import React from "react";
+import { CardProps } from "./interfaces";
 
 const Card = ({
   width,
@@ -11,7 +12,7 @@ const Card = ({
   marginBottom,
   marginLeft,
   marginRight,
-}) => {
+} : CardProps) => {
   return (
     <div
       className="card"

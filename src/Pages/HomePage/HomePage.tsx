@@ -1,7 +1,7 @@
 import React from "react";
-import "../App.css";
-import Card from "../components/Card";
-import FAQItem from "../components/FAQ";
+import "../../App.css";
+import Card from "../../Public Components/Card";
+import FAQItem from "./Components/FAQ";
 import { Link } from "react-router-dom";
 
 function HomePage() {

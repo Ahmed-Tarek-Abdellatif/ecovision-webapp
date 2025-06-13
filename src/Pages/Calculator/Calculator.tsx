@@ -1,36 +1,22 @@
-import React, { useState } from "react";
-import "./Calculator.css";
+import React, { useState } from 'react';
+import { calculateGreenArea } from './Functions/Functions';
+// import "./Calculator.css";
 
 const Calculator = () => {
-  const [area, setArea] = useState("");
-  const [mixingHeight, setMixingHeight] = useState("");
-  const [requiredGreenArea, setRequiredGreenArea] = useState("");
-
-  const calculateGreenArea = () => {
-    if (area && mixingHeight) {
-      const result = (parseFloat(area) * parseFloat(mixingHeight)) / 10000; // Convert to hectares
-      setRequiredGreenArea(result.toFixed(2));
-    } else {
-      alert("Please fill in both fields.");
-    }
-  };
+  const [area, setArea] = useState<string>('');
+  const [mixingHeight, setMixingHeight] = useState<string>('');
+  const [requiredGreenArea, setRequiredGreenArea] = useState<string>('');
 
   return (
     <div className="calculator-container">
       <div className="calculator-left">
-        <img
-          src="path-to-your-image.jpg"
-          alt="Green Landscape"
-          className="calculator-image"
-        />
+        <img src="path-to-your-image.jpg" alt="Green Landscape" className="calculator-image" />
       </div>
       <div className="calculator-right">
         <h1 className="calculator-title">Calculate Your Green Impact</h1>
         <p className="calculator-description">
-          Easily estimate the green land area required to offset air pollutants
-          like PM2.5, PM10, NO, CO, O3, and SO2. Leverage your data to take
-          actionable steps toward creating a cleaner and more sustainable
-          environment.
+          Easily estimate the green land area required to offset air pollutants like PM2.5, PM10, NO, CO, O3, and SO2.
+          Leverage your data to take actionable steps toward creating a cleaner and more sustainable environment.
         </p>
         <div className="calculator-inputs">
           <div className="input-group">
@@ -54,7 +40,10 @@ const Calculator = () => {
             />
           </div>
         </div>
-        <button className="calculate-button" onClick={calculateGreenArea}>
+        <button
+          className="calculate-button"
+          onClick={() => calculateGreenArea({ area, mixingHeight, setRequiredGreenArea })}
+        >
           Calculate
         </button>
         {requiredGreenArea && (

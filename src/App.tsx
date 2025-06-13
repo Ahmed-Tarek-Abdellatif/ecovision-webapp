@@ -7,11 +7,11 @@ import {
 
 import React from "react";
 import MainLayout from "./Layouts/MainLayout";
-import HomePage from "./pages/HomePage";
-import AQI from "./pages/AQI";
-import WQI from "./pages/WQI";
-import LoginPage from "./pages/Login";
-import Register from "./pages/Register";
+import HomePage from "./Pages/HomePage/HomePage";
+import AQI from "./Pages/AQI/AQI";
+import WQI from "./Pages/WQI/WQI";
+import LoginPage from "./Pages/Login/Login";
+import Register from "./Pages/Register/Register";
 
 
 function App() {

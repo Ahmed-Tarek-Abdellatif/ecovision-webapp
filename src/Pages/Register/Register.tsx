@@ -1,56 +1,35 @@
-import React, { useState } from "react";
-import axios from "axios";
-import "../App.css";
+import React, { useState } from 'react';
+import axios from 'axios';
+import '../../App.css';
+import { handleRegister } from './Functions/Functions';
 
 const Register = () => {
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post("http://localhost:3000/auth/register", {
-        userName,
-        email,
-        password,
-        phone,
-      });
-
-      alert("User created successfully!");
-      // Redirect to login page after successful registration
-      window.location.href = "/login"; // Redirect to login page
-    } catch (error) {
-      alert("Registration failed: " + error.response.data.message);
-    }
-  };
+  const [username, setUsername] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
 
   return (
     <div className="home-container">
       <div className="register-page">
         <div className="register-left">
-          <img
-            src="path-to-your-image.jpg"
-            alt="Nature Background"
-            className="register-image"
-          />
+          <img src="path-to-your-image.jpg" alt="Nature Background" className="register-image" />
         </div>
         <div className="register-right">
           <h1 className="register-title">Create an Account</h1>
-          <p className="register-subtitle">
-            Join us to explore insights on air and water quality.
-          </p>
-          <form className="register-form" onSubmit={handleRegister}>
+          <p className="register-subtitle">Join us to explore insights on air and water quality.</p>
+          <form
+            className="register-form"
+            onSubmit={(event) => handleRegister({ event, username, email, password, phone })}
+          >
             <div className="input-group">
               <label htmlFor="userName">Username</label>
               <input
                 type="text"
                 id="userName"
                 placeholder="Enter your username"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>

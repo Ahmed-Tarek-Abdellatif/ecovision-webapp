@@ -1,3 +1,4 @@
+import React from "react";
 import {
   FaGithub,
   FaInstagram,
@@ -8,7 +9,7 @@ import {
   FaPhone,
 } from "react-icons/fa";
 
-const Footer = () => {
+const Footer = ()  => {
   return (
     <footer className="footer-container">
       <div className="container">
