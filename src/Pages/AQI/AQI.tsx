@@ -9,6 +9,7 @@ import { handleFileChange, handleFilePreview } from './Functions/Functions';
 import ColumnDropdown from './Components/ColumnDropDown';
 import DataTable from './Components/DataTable';
 import Analytics from '../../Analytics';
+import Chart from 'chart.js/auto';
 
 function AQI() {
   const [file, setFile] = useState<File | null>(null);
@@ -46,6 +47,56 @@ function AQI() {
     'Very Unhealthy',
     'Very Hazardous',
   ];
+
+  const pieChartRef = React.useRef<HTMLCanvasElement | null>(null);
+  const pieChartInstance = React.useRef<Chart | null>(null);
+
+  React.useEffect(() => {
+    // Only run if canvas is mounted and greenArea is a valid number
+    if (
+      greenAreaResult &&
+      totalArea &&
+      totalArea > 0 &&
+      pieChartRef.current &&
+      !isNaN(Number(greenAreaResult.greenArea))
+    ) {
+      const green = Number(greenAreaResult.greenArea);
+      const other = Math.max(0, totalArea - green);
+
+      // Clear canvas before drawing
+      const ctx = pieChartRef.current.getContext('2d');
+      if (ctx) ctx.clearRect(0, 0, pieChartRef.current.width, pieChartRef.current.height);
+
+      if (pieChartInstance.current) pieChartInstance.current.destroy();
+      pieChartInstance.current = new Chart(pieChartRef.current, {
+        type: 'pie',
+        data: {
+          labels: ['Required Green Area', 'Other Area'],
+          datasets: [
+            {
+              data: [green, other],
+              backgroundColor: ['#4caf50', '#bdbdbd'],
+              borderColor: ['#388e3c', '#757575'],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: false, // Set to false to respect canvas size
+          plugins: {
+            legend: { position: 'bottom' },
+            title: {
+              display: true,
+              text: 'Total Area Breakdown',
+            },
+          },
+        },
+      });
+    }
+    // Cleanup on unmount
+    
+  }, [greenAreaResult, totalArea]);
+
   return (
     <div className="home-container" style={{ overflowX: 'hidden', width: '100vw' }}>
       <Header
@@ -55,6 +106,30 @@ function AQI() {
         header={'Clean Air, Healthy Lives'}
       ></Header>
       <Table fullName={'Air Quality Index'} name={'AQI'} ranges={ranges} classification={classification}></Table>
+      
+      {/* Constraints Section */}
+      <div
+        style={{
+          maxWidth: 700,
+          margin: '32px auto 16px auto',
+          padding: '16px 24px',
+          background: '#f5f7fa',
+          border: '1px solid #e0e0e0',
+          borderRadius: 8,
+          color: '#333',
+          fontSize: '1rem',
+        }}
+      >
+        <strong>Data Upload Constraints:</strong>
+        <ul style={{ margin: '8px 0 0 18px', padding: 0 }}>
+          <li>Minimum <b>15 rows</b> required</li>
+          <li>Minimum <b>2 columns</b> required</li>
+          <li>
+            Allowed column names: <b>so2</b>, <b>no</b>, <b>pm10</b>, <b>pm2.5</b>, <b>o3</b>, <b>co</b>
+          </li>
+        </ul>
+      </div>
+
       <Upload
         file={file}
         setFile={setFile}
@@ -155,70 +230,113 @@ function AQI() {
               </button>
             </div>
             <div className="green-area-section">
-              <label htmlFor="total-area" className="green-area-label">
-                Total Area (sq meters):
-              </label>
-              <input
-                id="total-area"
-                className="green-area-input"
-                type="number"
-                min="0"
-                placeholder="Enter total area..."
-                value={totalArea}
-                onChange={(e) => setTotalArea(Number(e.target.value))}
-              />
-              <button
-                className="upload-button"
-                style={{ marginLeft: 12, marginTop: 0 }}
-                onClick={async () => {
-                  setGreenAreaResult(null);
-                  setGreenAreaError(null);
-                  if (!totalArea || isNaN(totalArea) || Number(totalArea) <= 0) {
-                    setGreenAreaError('Please enter a valid total area.');
-                    return;
-                  }
-                  setGreenAreaLoading(true);
-                  try {
-                    const token = localStorage.getItem('accessToken');
-                    const response = await axios.post(
-                      'http://localhost:3000/api/aqi/calculate-green-area',
-                      { totalArea },
-                      { headers: { Authorization: `Bearer ${token}` } }
-                    );
-                    setGreenAreaResult(response.data);
-                  } catch (err) {
-                    let backendMsg = '';
-                    if (err?.response?.data?.details) {
-                      backendMsg =
-                        typeof err.response.data.details === 'object'
-                          ? JSON.stringify(err.response.data.details)
-                          : err.response.data.details;
-                    } else if (err?.response?.data?.message) {
-                      backendMsg = err.response.data.message;
-                    } else if (err?.response?.data?.error) {
-                      backendMsg = err.response.data.error;
-                    } else if (err?.response?.data) {
-                      backendMsg = JSON.stringify(err.response.data);
-                    } else {
-                      backendMsg = err?.message || '';
-                    }
-                    setGreenAreaError('Failed to calculate green area. ' + backendMsg);
-                  } finally {
-                    setGreenAreaLoading(false);
-                  }
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 16,
+                  marginBottom: 0,
                 }}
               >
-                Calculate Green Area
-              </button>
+                <label htmlFor="total-area" className="green-area-label">
+                  Total Area (sq meters):
+                </label>
+                <input
+                  id="total-area"
+                  className="green-area-input"
+                  type="number"
+                  min="0"
+                  placeholder="Enter total area..."
+                  value={totalArea}
+                  onChange={(e) => setTotalArea(Number(e.target.value))}
+                />
+                <button
+                  className="upload-button"
+                  style={{ marginLeft: 12, marginTop: 0 }}
+                  onClick={async () => {
+                    setGreenAreaResult(null);
+                    setGreenAreaError(null);
+                    if (!totalArea || isNaN(totalArea) || Number(totalArea) <= 0) {
+                      setGreenAreaError('Please enter a valid total area.');
+                      return;
+                    }
+                    setGreenAreaLoading(true);
+                    try {
+                      const token = localStorage.getItem('accessToken');
+                      const response = await axios.post(
+                        'http://localhost:3000/api/aqi/calculate-green-area',
+                        { totalArea },
+                        { headers: { Authorization: `Bearer ${token}` } }
+                      );
+                      setGreenAreaResult(response.data);
+                    } catch (err) {
+                      let backendMsg = '';
+                      if (err?.response?.data?.details) {
+                        backendMsg =
+                          typeof err.response.data.details === 'object'
+                            ? JSON.stringify(err.response.data.details)
+                            : err.response.data.details;
+                      } else if (err?.response?.data?.message) {
+                        backendMsg = err.response.data.message;
+                      } else if (err?.response?.data?.error) {
+                        backendMsg = err.response.data.error;
+                      } else if (err?.response?.data) {
+                        backendMsg = JSON.stringify(err.response.data);
+                      } else {
+                        backendMsg = err?.message || '';
+                      }
+                      setGreenAreaError('Failed to calculate green area. ' + backendMsg);
+                    } finally {
+                      setGreenAreaLoading(false);
+                    }
+                  }}
+                >
+                  Calculate Green Area
+                </button>
+                {/* Pie Chart aligned horizontally */}
+                {greenAreaResult && (
+                  <div
+                    style={{
+                      width: 320,
+                      height: 320,
+                      marginLeft: 32,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: '#fff',
+                      // border removed
+                      borderRadius: 8,
+                    }}
+                  >
+                    <canvas
+                      ref={pieChartRef}
+                      key={greenAreaResult.greenArea + '-' + totalArea}
+                      width={300}
+                      height={300}
+                      style={{ display: 'block', maxWidth: '100%', maxHeight: '100%' }}
+                    >
+                      Pie chart could not be rendered.
+                    </canvas>
+                  </div>
+                )}
+              </div>
               {greenAreaLoading && <span className="green-area-loading">Calculating...</span>}
               {greenAreaError && <span className="green-area-error">{greenAreaError}</span>}
+              {/* Green area result directly below the pie chart */}
               {greenAreaResult && (
-                <div className="green-area-result">
-                  <strong>Required Green Area:</strong> {greenAreaResult.greenArea} {greenAreaResult.unit}
-                  <br />
-                  <span style={{ color: '#6b7280', fontSize: '0.95rem' }}>
-                    (GSF: {greenAreaResult.gsf}, Factor: {greenAreaResult.factor})
-                  </span>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', marginTop: 0 }}>
+                  {/* Empty div to align with input/button */}
+                  <div style={{ flex: 1 }} />
+                  <div >
+                    <div className="green-area-result" style={{ marginTop: 16, alignItems: 'center', marginLeft: 660 }}>
+                      <strong>Required Green Area:</strong> {greenAreaResult.greenArea} {greenAreaResult.unit}
+                      <br />
+                      <span style={{ color: '#6b7280', fontSize: '0.95rem' }}>
+                        (GSF: {greenAreaResult.gsf}, Factor: {greenAreaResult.factor})
+                      </span>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
