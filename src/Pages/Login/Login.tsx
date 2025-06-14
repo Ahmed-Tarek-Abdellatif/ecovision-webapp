@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Card from "../components/Card";
-import "../App.css";
+import Card from "../../Public Components/Card";
+import "../../App.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -11,25 +11,20 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      // Sending login request to the backend
       const response = await axios.post("http://localhost:3000/auth/login", {
         email,
         password,
       });
 
-      // On successful login, save tokens to localStorage
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
 
-      // Set Authorization header globally for axios
       axios.defaults.headers["Authorization"] = `Bearer ${response.data.accessToken}`;
 
       alert("Login successful!");
 
-      // Redirect to dashboard or home page after successful login
-      window.location.href = "/aqi"; 
+      window.location.href = "/aqi";
     } catch (error) {
-      // Handle errors from the backend (like invalid credentials)
       alert("Login failed: " + error.response.data.message);
     }
   };

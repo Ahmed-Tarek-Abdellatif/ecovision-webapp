@@ -1,29 +1,28 @@
-import React, { useState } from "react";
-import axios from "axios";
-import "../App.css";
+import React, { useState } from 'react';
+import axios from 'axios';
+import '../../App.css';
 
 const Register = () => {
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
+  const [userName, setUserName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/register", {
+      const response = await axios.post('http://localhost:3000/auth/register', {
         userName,
         email,
         password,
         phone,
       });
 
-      alert("User created successfully!");
-      // Redirect to login page after successful registration
-      window.location.href = "/login"; // Redirect to login page
+      alert('User created successfully!');
+      window.location.href = '/login';
     } catch (error) {
-      alert("Registration failed: " + error.response.data.message);
+      alert('Registration failed: ' + error.response.data.message);
     }
   };
 
@@ -31,17 +30,11 @@ const Register = () => {
     <div className="home-container">
       <div className="register-page">
         <div className="register-left">
-          <img
-            src="path-to-your-image.jpg"
-            alt="Nature Background"
-            className="register-image"
-          />
+          <img src="path-to-your-image.jpg" alt="Nature Background" className="register-image" />
         </div>
         <div className="register-right">
           <h1 className="register-title">Create an Account</h1>
-          <p className="register-subtitle">
-            Join us to explore insights on air and water quality.
-          </p>
+          <p className="register-subtitle">Join us to explore insights on air and water quality.</p>
           <form className="register-form" onSubmit={handleRegister}>
             <div className="input-group">
               <label htmlFor="userName">Username</label>
