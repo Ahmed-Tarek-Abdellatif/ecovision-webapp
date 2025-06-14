@@ -41,6 +41,7 @@ export interface UploadProps {
   selectedPreviewColumns:string[],
   setSelectedPreviewColumns: React.Dispatch<SetStateAction<string[]>>,
   handleFilePreview?: (args: HandleFilePreview) => void;
+  handleUpload?: () => void;
 }
 
 export interface HandleOnDropProps {

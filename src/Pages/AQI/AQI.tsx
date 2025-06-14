@@ -5,9 +5,10 @@ import { DataRow, GreenAreaResult, PredictionRow } from './Interface/Interface';
 import Header from '../../Public Components/Header';
 import Table from '../../Public Components/Table';
 import Upload from '../../Public Components/Upload';
-import { handleFileChange, handleFilePreview, handleUpload } from './Functions/Functions';
+import { handleFileChange, handleFilePreview } from './Functions/Functions';
 import ColumnDropdown from './Components/ColumnDropDown';
 import DataTable from './Components/DataTable';
+import Analytics from '../../Analytics';
 
 function AQI() {
   const [file, setFile] = useState<File | null>(null);
@@ -72,132 +73,161 @@ function AQI() {
         endDate={endDate}
         previewHover={previewHover}
         handleFilePreview={handleFilePreview}
-
+        handleUpload={async () => {
+          if (!file) {
+            alert('Please select a file first.');
+            return;
+          }
+          setLoading(true);
+          setError(null);
+          try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('start_date', startDate || '');
+            formData.append('standard', 'us');
+            const response = await axios.post('http://localhost:8080/predict-from-csv', formData);
+            if (response.data && response.data.results) {
+              setPredictions(response.data.results);
+            } else {
+              setError('No predictions returned.');
+            }
+          } catch (err) {
+            setError('Failed to upload or predict.');
+          } finally {
+            setLoading(false);
+          }
+        }}
       ></Upload>
 
       {loading && <p>Loading predictions...</p>}
       {error && <p className="error-message">{error}</p>}
 
       {allPredColumns.length > 0 && predictions.length > 0 && (
-        <div className="table-section" style={{ maxWidth: 1200, margin: '0 auto 32px auto' }}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%',
-              marginLeft: 75,
-              marginBottom: 20,
-              marginTop: 40,
-              flexWrap: 'wrap',
-            }}
-          >
-            <h3 style={{ margin: 0, marginRight: 16 }}>Predictions</h3>
-            <ColumnDropdown
-              columns={allPredColumns}
-              selectedColumns={selectedPredColumns}
-              setSelectedColumns={setSelectedPredColumns}
-              showDropdown={showPredColDropdown}
-              setShowDropdown={setShowPredColDropdown}
-              label={undefined}
-            />
-          </div>
-          <DataTable columns={displayPredColumns} rows={predictions} maxRows={5} />
-          {/* Download Predictions Button at the bottom */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 16 }}>
-            <button
-              className="upload-button"
-              style={{ marginRight: 35, marginTop: 10, marginBottom: 20 }}
-              onClick={() => {
-                const csvRows = [] as string[];
-                csvRows.push(displayPredColumns.join(','));
-                predictions.forEach((row) => {
-                  csvRows.push(displayPredColumns.map((col) => JSON.stringify(row[col] ?? '')).join(','));
-                });
-                const csvContent = csvRows.join('\n');
-                const blob = new Blob([csvContent], { type: 'text/csv' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'aqi_predictions.csv';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+        <>
+          <div className="table-section" style={{ maxWidth: 1200, margin: '0 auto 32px auto' }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '100%',
+                marginLeft: 75,
+                marginBottom: 20,
+                marginTop: 40,
+                flexWrap: 'wrap',
               }}
             >
-              Download
-            </button>
-          </div>
-          <div className="green-area-section">
-            <label htmlFor="total-area" className="green-area-label">
-              Total Area (sq meters):
-            </label>
-            <input
-              id="total-area"
-              className="green-area-input"
-              type="number"
-              min="0"
-              placeholder="Enter total area..."
-              value={totalArea}
-              onChange={(e) => setTotalArea(Number(e.target.value))}
-            />
-            <button
-              className="upload-button"
-              style={{ marginLeft: 12, marginTop: 0 }}
-              onClick={async () => {
-                setGreenAreaResult(null);
-                setGreenAreaError(null);
-                if (!totalArea || isNaN(totalArea) || Number(totalArea) <= 0) {
-                  setGreenAreaError('Please enter a valid total area.');
-                  return;
-                }
-                setGreenAreaLoading(true);
-                try {
-                  const token = localStorage.getItem('accessToken');
-                  const response = await axios.post(
-                    'http://localhost:3000/api/aqi/calculate-green-area',
-                    { totalArea },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                  );
-                  setGreenAreaResult(response.data);
-                } catch (err) {
-                  let backendMsg = '';
-                  if (err?.response?.data?.details) {
-                    backendMsg =
-                      typeof err.response.data.details === 'object'
-                        ? JSON.stringify(err.response.data.details)
-                        : err.response.data.details;
-                  } else if (err?.response?.data?.message) {
-                    backendMsg = err.response.data.message;
-                  } else if (err?.response?.data?.error) {
-                    backendMsg = err.response.data.error;
-                  } else if (err?.response?.data) {
-                    backendMsg = JSON.stringify(err.response.data);
-                  } else {
-                    backendMsg = err?.message || '';
+              <h3 style={{ margin: 0, marginRight: 16 }}>Predictions</h3>
+              <ColumnDropdown
+                columns={allPredColumns}
+                selectedColumns={selectedPredColumns}
+                setSelectedColumns={setSelectedPredColumns}
+                showDropdown={showPredColDropdown}
+                setShowDropdown={setShowPredColDropdown}
+                label={undefined}
+              />
+            </div>
+            <DataTable columns={displayPredColumns} rows={predictions} maxRows={5} />
+            {/* Download Predictions Button at the bottom */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 16 }}>
+              <button
+                className="upload-button"
+                style={{ marginRight: 35, marginTop: 10, marginBottom: 20 }}
+                onClick={() => {
+                  const csvRows = [] as string[];
+                  csvRows.push(displayPredColumns.join(','));
+                  predictions.forEach((row) => {
+                    csvRows.push(displayPredColumns.map((col) => JSON.stringify(row[col] ?? '')).join(','));
+                  });
+                  const csvContent = csvRows.join('\n');
+                  const blob = new Blob([csvContent], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'aqi_predictions.csv';
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                }}
+              >
+                Download
+              </button>
+            </div>
+            <div className="green-area-section">
+              <label htmlFor="total-area" className="green-area-label">
+                Total Area (sq meters):
+              </label>
+              <input
+                id="total-area"
+                className="green-area-input"
+                type="number"
+                min="0"
+                placeholder="Enter total area..."
+                value={totalArea}
+                onChange={(e) => setTotalArea(Number(e.target.value))}
+              />
+              <button
+                className="upload-button"
+                style={{ marginLeft: 12, marginTop: 0 }}
+                onClick={async () => {
+                  setGreenAreaResult(null);
+                  setGreenAreaError(null);
+                  if (!totalArea || isNaN(totalArea) || Number(totalArea) <= 0) {
+                    setGreenAreaError('Please enter a valid total area.');
+                    return;
                   }
-                  setGreenAreaError('Failed to calculate green area. ' + backendMsg);
-                } finally {
-                  setGreenAreaLoading(false);
-                }
-              }}
-            >
-              Calculate Green Area
-            </button>
-            {greenAreaLoading && <span className="green-area-loading">Calculating...</span>}
-            {greenAreaError && <span className="green-area-error">{greenAreaError}</span>}
-            {greenAreaResult && (
-              <div className="green-area-result">
-                <strong>Required Green Area:</strong> {greenAreaResult.greenArea} {greenAreaResult.unit}
-                <br />
-                <span style={{ color: '#6b7280', fontSize: '0.95rem' }}>
-                  (GSF: {greenAreaResult.gsf}, Factor: {greenAreaResult.factor})
-                </span>
-              </div>
-            )}
+                  setGreenAreaLoading(true);
+                  try {
+                    const token = localStorage.getItem('accessToken');
+                    const response = await axios.post(
+                      'http://localhost:3000/api/aqi/calculate-green-area',
+                      { totalArea },
+                      { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    setGreenAreaResult(response.data);
+                  } catch (err) {
+                    let backendMsg = '';
+                    if (err?.response?.data?.details) {
+                      backendMsg =
+                        typeof err.response.data.details === 'object'
+                          ? JSON.stringify(err.response.data.details)
+                          : err.response.data.details;
+                    } else if (err?.response?.data?.message) {
+                      backendMsg = err.response.data.message;
+                    } else if (err?.response?.data?.error) {
+                      backendMsg = err.response.data.error;
+                    } else if (err?.response?.data) {
+                      backendMsg = JSON.stringify(err.response.data);
+                    } else {
+                      backendMsg = err?.message || '';
+                    }
+                    setGreenAreaError('Failed to calculate green area. ' + backendMsg);
+                  } finally {
+                    setGreenAreaLoading(false);
+                  }
+                }}
+              >
+                Calculate Green Area
+              </button>
+              {greenAreaLoading && <span className="green-area-loading">Calculating...</span>}
+              {greenAreaError && <span className="green-area-error">{greenAreaError}</span>}
+              {greenAreaResult && (
+                <div className="green-area-result">
+                  <strong>Required Green Area:</strong> {greenAreaResult.greenArea} {greenAreaResult.unit}
+                  <br />
+                  <span style={{ color: '#6b7280', fontSize: '0.95rem' }}>
+                    (GSF: {greenAreaResult.gsf}, Factor: {greenAreaResult.factor})
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+          {/* Analytics Dashboard for AQI predictions */}
+          <div style={{ marginTop: 40 }}>
+            <Analytics data={predictions} qualityIndexField="max_aqi" dateField="timestamp" />
+          </div>
+        </>
       )}
     </div>
   );

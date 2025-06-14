@@ -7,9 +7,18 @@ from fastapi.responses import JSONResponse
 from typing import Literal
 from sklearn.impute import KNNImputer
 from joblib import load
+from fastapi.middleware.cors import CORSMiddleware
 
 # === Setup
 app = FastAPI(title="SVR AQI Predictor")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or ["http://localhost:5173"] for stricter security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 MODEL_DIR = "app/models"
 gases = ["so2", "co", "o3", "pm10", "pm2.5", "no"]
 models = {}
@@ -50,21 +59,26 @@ async def predict_from_csv(
     start_date: str = Form(...),
     standard: Literal["us"] = Form("us")
 ):
+    print("[DEBUG] Received request for /predict-from-csv")
     df = pd.read_csv(file.file)
+    print(f"[DEBUG] CSV loaded: {df.shape[0]} rows, {df.shape[1]} columns")
 
     # === Ensure all required gases are present
     missing_cols = [gas for gas in gases if gas not in df.columns]
     if missing_cols:
+        print(f"[DEBUG] Missing columns: {missing_cols}")
         return JSONResponse(content={"error": f"Missing columns: {missing_cols}"}, status_code=400)
 
     # === Clean and Impute
     df[gases] = df[gases].replace([np.inf, -np.inf], np.nan)
     df[gases] = np.log1p(df[gases])  # log1p for skewed values
+    print("[DEBUG] Data cleaned and log1p applied")
 
     imputer = KNNImputer(n_neighbors=10, weights="distance")
     cols_with_na = df.columns[df.isna().any()]
     if len(cols_with_na) > 0:
         df[cols_with_na] = pd.DataFrame(imputer.fit_transform(df[cols_with_na]), columns=cols_with_na)
+    print("[DEBUG] Imputation done")
 
     # === Winsorization (IQR Clipping)
     for gas in gases:
@@ -72,6 +86,7 @@ async def predict_from_csv(
         Q3 = df[gas].quantile(0.75)
         IQR = Q3 - Q1
         df[gas] = np.clip(df[gas], Q1 - 1.5 * IQR, Q3 + 1.5 * IQR)
+    print("[DEBUG] Winsorization done")
 
     # === Add per-gas features (lags + rolling stats)
     for gas in gases:
@@ -80,9 +95,11 @@ async def predict_from_csv(
         df["rolling_mean"] = df[gas].rolling(window=5).mean()
         df["rolling_std"] = df[gas].rolling(window=5).std()
         df["ema"] = df[gas].ewm(span=5).mean()
+    print("[DEBUG] Feature engineering done")
 
     df.dropna(inplace=True)
     df.reset_index(drop=True, inplace=True)
+    print(f"[DEBUG] After dropna: {df.shape[0]} rows remain")
 
     # === Predict row-by-row
     results = []
@@ -91,31 +108,24 @@ async def predict_from_csv(
     for i, row in df.iterrows():
         row_result = {}
         max_aqi = 0
-
+        print(f"[DEBUG] Predicting row {i+1}/{df.shape[0]}")
         for gas in gases:
             try:
                 features = get_feature_names(gas)
-                # Pass DataFrame with feature names to scaler to avoid warning
                 X_row_df = pd.DataFrame([row[features].values], columns=features)
                 X_scaled = scalers[gas].transform(X_row_df)
                 pred = models[gas].predict(X_scaled)[0]
-
-                # Inverse log1p and clamp to non-negative
-                pred_actual = max(0, np.expm1(pred))  # Clamp negative values
+                pred_actual = max(0, np.expm1(pred))
                 row_result[f"{gas}_pred"] = round(pred_actual, 3)
-
-                # Calculate AQI
                 aqi = calculate_individual_aqi(gas, pred_actual, standard)
                 max_aqi = max(max_aqi, aqi)
             except Exception as e:
                 print(f"⚠️ Prediction error for {gas} at row {i}: {e}")
                 row_result[f"{gas}_pred"] = None
-
-
         row_result["max_aqi"] = max_aqi
         row_result["timestamp"] = (start_dt + timedelta(hours=i)).strftime("%Y-%m-%d %H:%M:%S")
         results.append(row_result)
-
+    print("[DEBUG] Prediction loop complete. Returning results.")
     return JSONResponse(content={"results": results})
 
 #uvicorn app.main:app --port 8080 --reload

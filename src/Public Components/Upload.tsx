@@ -1,5 +1,5 @@
 import React from 'react';
-import { handleFileChange, handleUpload } from '../Pages/AQI/Functions/Functions';
+import { handleFileChange, handleUpload as handleUploadDefault } from '../Pages/AQI/Functions/Functions';
 import { HandleOnDragOver } from '../Public Functions/HandleOnDragOver';
 import { UploadProps } from './interfaces';
 import { HandleOnDrop } from '../Public Functions/HandleOnDrop';
@@ -22,7 +22,9 @@ function Upload({
   setSelectedPreviewColumns,
   showPreviewColDropdown,
   setShowPreviewColDropdown,
-  handleFilePreview
+  handleFilePreview,
+  handleUpload,
+  setShowPreview
 }: UploadProps) {
   const style: React.CSSProperties = {
     display: 'flex',
@@ -92,12 +94,12 @@ function Upload({
         {file && <span style={{ marginTop: '0.75rem', color: '#059669', fontWeight: 500 }}>Selected: {file.name}</span>}
       </label>
       <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={() => handleUpload({file, setData})} className="upload-button" style={{ marginTop: '8px' }}>
+        <button onClick={handleUpload ? handleUpload : () => handleUploadDefault({file, setData})} className="upload-button" style={{ marginTop: '8px' }}>
           Upload
         </button>
         {file && (
           <button
-            onClick={() => handleFilePreview()}
+            onClick={() => handleFilePreview && handleFilePreview({ file, setShowPreview, setData })}
             className="upload-button"
             style={{
               marginTop: '8px',

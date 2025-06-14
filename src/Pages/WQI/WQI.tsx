@@ -8,7 +8,8 @@ import Table from '../../Public Components/Table';
 import { HandleOnDrop } from '../../Public Functions/HandleOnDrop';
 import { HandleOnDragOver } from '../../Public Functions/HandleOnDragOver';
 import { HandleOnDragLeave } from '../../Public Functions/HandleOnDragLeave';
-import { handleDownload, handlePredColCheckbox } from './Functions/Functions';
+import { handleDownload, handlePredColCheckbox } from '../WQI/Functions/Functions';
+import { handleFilePreview } from '../AQI/Functions/Functions';
 import Upload from '../../Public Components/Upload';
 
 function WQI() {
@@ -65,6 +66,7 @@ function WQI() {
         data={data}
         endDate={endDate}
         previewHover={previewHover}
+        handleFilePreview={() => handleFilePreview({ file, setShowPreview, setData })}
       ></Upload>
 
       {loading && <p>Loading predictions...</p>}

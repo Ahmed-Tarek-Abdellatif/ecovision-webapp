@@ -30,10 +30,10 @@ function Navbarr() {
             Home
           </NavLink>
           <NavLink to="/aqi" className="nav-link">
-            Air Quality Index (AQI)
+            Air Quality Index 
           </NavLink>
           <NavLink to="/wqi" className="nav-link">
-            Water Quality Index (WQI)
+            Water Quality Index 
           </NavLink>
           <NavLink
             to="https://docs.google.com/document/d/1J-6mRalaMcgo4ir5gT7oSHkPmytGK4uv0MjuuPoOEoo/edit?usp=sharing"
@@ -41,6 +41,7 @@ function Navbarr() {
           >
             Documentation
           </NavLink>
+          
         </Nav>
 
         <a href="mailto:bit.x.byte@gmail.com" className="contact-btn">

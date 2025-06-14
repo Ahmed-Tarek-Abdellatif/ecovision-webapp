@@ -7,6 +7,7 @@ import AQI from './Pages/AQI/AQI';
 import WQI from './Pages/WQI/WQI';
 import LoginPage from './pages/Login/Login';
 import Register from './Pages/Register/Register';
+import Analytics from './Analytics'
 
 function App() {
   const router = createBrowserRouter(
@@ -15,6 +16,7 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="aqi" element={<AQI />} />
         <Route path="wqi" element={<WQI />} />
+        <Route path="analytics" element={<Analytics />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<Register />} />
       </Route>
