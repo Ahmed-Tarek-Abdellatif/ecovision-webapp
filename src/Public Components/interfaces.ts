@@ -1,10 +1,11 @@
 import React, { SetStateAction } from 'react';
 import { DataRow, HandleFilePreview } from '../Pages/AQI/Interface/Interface';
+import Position from '../types/Position';
 
 export interface CardProps {
   width: string;
   height: string;
-  position: string;
+  position: Position;
   path: string;
   alt: string;
   style?: React.CSSProperties;

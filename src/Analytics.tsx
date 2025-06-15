@@ -491,7 +491,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ data, qualityIndexField: propQual
       data: {
         labels: bins,
         datasets: [{
-          label: `${indexType} Distribution`,
+          label: ` Distribution`,
           data: frequencies,
           backgroundColor: 'rgba(54, 162, 235, 0.6)',
           borderColor: 'rgba(54, 162, 235, 1)',
@@ -504,7 +504,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ data, qualityIndexField: propQual
         plugins: {
           title: {
             display: true,
-            text: `${indexType} Distribution`
+            text: ` Distribution`
           }
         },
         scales: {
@@ -601,7 +601,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ data, qualityIndexField: propQual
       data: {
         labels,
         datasets: [{
-          label: `${indexType} Values`,
+          label: `Values`,
           data: values,
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
@@ -614,7 +614,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ data, qualityIndexField: propQual
         plugins: {
           title: {
             display: true,
-            text: `${indexType} Over Time`
+            text: `Over Time`
           }
         },
         scales: {
@@ -815,8 +815,21 @@ const Analytics: React.FC<AnalyticsProps> = ({ data, qualityIndexField: propQual
       <main className="content">
         <div className="container">
           <header className="dashboard-header">
-            <h1><i className="fas fa-wind"></i> Air and Water Quality Index Prediction Dashboard</h1>
-            <p className="dashboard-subtitle">Analyze air and water quality data and predict future trends. Date fields are automatically excluded from numeric analysis.</p>
+            <h1>
+              <i className="fas fa-wind"></i>{' '}
+              {indexType === 'WQI'
+                ? 'Water Quality Analytics Dashboard'
+                : indexType === 'AQI'
+                ? 'Air Quality Analytics Dashboard'
+                : 'Air and Water Quality Index Prediction Dashboard'}
+            </h1>
+            <p className="dashboard-subtitle">
+              {indexType === 'WQI'
+                ? 'Analyze water quality data and predict future trends. Date fields are automatically excluded from numeric analysis.'
+                : indexType === 'AQI'
+                ? 'Analyze air quality data and predict future trends. Date fields are automatically excluded from numeric analysis.'
+                : 'Analyze air and water quality data and predict future trends. Date fields are automatically excluded from numeric analysis.'}
+            </p>
           </header>
           {/* Status Message */}
           {statusMessage.text && (
@@ -840,7 +853,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ data, qualityIndexField: propQual
               <p id="totalItems">{displayDataset.length}</p>
             </div>
             <div className="stat-box">
-              <h3>Average <span id="indexTypeLabel">{indexType}</span></h3>
+              <h3>Average </h3>
               <p id="avgValue">{avgValue.toFixed(2)}</p>
             </div>
             <div className="stat-box">
@@ -853,7 +866,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ data, qualityIndexField: propQual
           </div>
           <div className="dashboard">
             <div className="card">
-              <h2><i className="fas fa-bars"></i> <span id="distTitle">{indexType} Distribution</span></h2>
+              <h2><i className="fas fa-bars"></i> <span id="distTitle">Distribution</span></h2>
               <div className="chart-container">
                 <canvas ref={mainChartRef} id="mainChart"></canvas>
               </div>
@@ -867,7 +880,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ data, qualityIndexField: propQual
           </div>
           <div className="prediction-row">
             <div className="card prediction-card">
-              <h2><i className="fas fa-chart-line"></i> <span id="predTitle">{indexType} Prediction</span> (15 Days)</h2>
+              <h2><i className="fas fa-chart-line"></i> <span id="predTitle">Prediction</span> (15 Days)</h2>
               <div className="chart-container">
                 <canvas ref={predictionChartRef} id="predictionChart"></canvas>
               </div>

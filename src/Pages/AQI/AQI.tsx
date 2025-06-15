@@ -104,6 +104,7 @@ function AQI() {
           'Join us in building sustainable cities where clean air powers healthier communities. Together, we can create a future where everyone breathes easy and thrives in harmony with nature.'
         }
         header={'Clean Air, Healthy Lives'}
+        imagePath={'src/assets/Page 1/AirCard.jpg'}
       ></Header>
       <Table fullName={'Air Quality Index'} name={'AQI'} ranges={ranges} classification={classification}></Table>
       

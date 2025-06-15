@@ -2,7 +2,22 @@ import React from "react";
 import Card from "./Card";
 import { HeaderProps } from "./interfaces";
 
-function Header ({header, details} : HeaderProps) {
+interface ExtendedHeaderProps extends HeaderProps {
+  imagePath?: string;
+}
+
+function Header ({ header, details, imagePath }: ExtendedHeaderProps) {
+  // Default images for AQI, WQI, and Home
+  let cardImage = imagePath;
+  if (!cardImage) {
+    if (header?.toLowerCase().includes('water')) {
+      cardImage = 'src/assets/Page 1/WaterCard.jpg';
+    } else if (header?.toLowerCase().includes('air')) {
+      cardImage = 'src/assets/Page 1/AirCard.jpg';
+    } else {
+      cardImage = 'src/assets/Page 1/DefaultCard.jpg';
+    }
+  }
   return (
     <div
         className="home-header"
@@ -31,7 +46,7 @@ function Header ({header, details} : HeaderProps) {
             width="300px"
             height="400px"
             position="relative"
-            path="src\assets\Page 1\WaterCard.jpg"
+            path={cardImage}
             alt="Header Image"
             style={{
               border: '1px solid ',

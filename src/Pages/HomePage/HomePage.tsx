@@ -13,6 +13,7 @@ function HomePage() {
           'Harness advanced tools to predict Air Quality Index (AQI) and Water Quality Index (WQI), and calculate the green land required to offset pollutants. Empowering you with the knowledge to create cleaner, healthier, and more sustainable communities.'
         }
         header={'Air, Water, and Green Solutions'}
+        imagePath={'src/assets/Page 1/Header.jpg'}
       ></Header>
       <div className="faq-section">
         <h2>FAQs about AQI, WQI and Pollutants</h2>

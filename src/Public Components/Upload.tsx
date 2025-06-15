@@ -44,7 +44,7 @@ function Upload({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
       <div style={{ display: 'flex', gap: 16, marginBottom: 12 }}>
-        <div>
+        <div className="gas-selector">
           <label htmlFor="start-date" style={{ fontWeight: 500, marginRight: 8 }}>
             Start Date:
           </label>
@@ -53,10 +53,10 @@ function Upload({
             id="start-date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            style={{ padding: 6, borderRadius: 4, border: '1px solid #d1d5db' }}
+            className="gas-date-input"
           />
         </div>
-        <div>
+        <div className="gas-selector">
           <label htmlFor="end-date" style={{ fontWeight: 500, marginRight: 8 }}>
             End Date:
           </label>
@@ -65,7 +65,7 @@ function Upload({
             id="end-date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            style={{ padding: 6, borderRadius: 4, border: '1px solid #d1d5db' }}
+            className="gas-date-input"
           />
         </div>
       </div>

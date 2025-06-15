@@ -18,11 +18,11 @@ function Navbarr() {
         <div className="navbar-brand">
           <img
             src="src/assets/Logo.png"
-            alt="Ecovision Logo"
+            alt="EcoVision Logo"
             className="navbar-logo"
           />
           <i className="fas fa-leaf text-green-500 text-2xl mr-2"></i>
-          <span>Ecovision</span>
+          <span>EcoVision</span>
         </div>
 
         <Nav className="navbar-links mx-auto">

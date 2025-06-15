@@ -1,6 +1,7 @@
 # app/main.py
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from datetime import timedelta
 import pandas as pd
 import numpy as np
@@ -15,6 +16,14 @@ from app.utils.preprocessing import preprocess_and_generate_features
 warnings.filterwarnings("ignore", category=UserWarning)
 
 app = FastAPI(title="Smart WQI Predictor")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or ["http://localhost:5173"] for stricter security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 WQI_COLUMNS = [
     'pH_combined', 'Dissolved Oxygen', 'Bio-Chemical Oxygen Demand (mg/L)',

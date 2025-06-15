@@ -993,7 +993,7 @@ body, html, #root, .home-container {
   align-items: center;
   gap: 10px;
 }
-.gas-selector select {
+.gas-selector select, .gas-date-input {
   padding: 8px 16px;
   border-radius: 6px;
   border: 2px solid #3b82f6;
@@ -1004,7 +1004,7 @@ body, html, #root, .home-container {
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
 }
-.gas-selector select:focus {
+.gas-selector select:focus, .gas-date-input:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 2px #3b82f633;
 }
@@ -1015,6 +1015,72 @@ body, html, #root, .home-container {
 .gas-selector select option:checked, .gas-selector select option[selected] {
   background: #3b82f6;
   color: #fff;
+}
+
+/* AQI Class Styles */
+.aqi-class {
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 4px 10px;
+  display: inline-block;
+  min-width: 90px;
+  text-align: center;
+}
+.aqi-good {
+  background: #e0f7fa;
+  color: #00796b;
+}
+.aqi-moderate {
+  background: #fffde7;
+  color: #fbc02d;
+}
+.aqi-unhealthy-sensitive {
+  background: #ffe0b2;
+  color: #f57c00;
+}
+.aqi-unhealthy {
+  background: #ffcdd2;
+  color: #c62828;
+}
+.aqi-very-unhealthy {
+  background: #d1c4e9;
+  color: #6a1b9a;
+}
+.aqi-very-hazardous {
+  background: #bdbdbd;
+  color: #212121;
+}
+
+/* WQI Class Styles */
+.wqi-class {
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 4px 10px;
+  display: inline-block;
+  min-width: 90px;
+  text-align: center;
+}
+.wqi-excellent {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+.wqi-good {
+  background: #e8f5e9;
+  color: #43a047;
+}
+.wqi-medium {
+  background: #fffde7;
+  color: #fbc02d;
+}
+.wqi-bad {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+.wqi-very-bad {
+  background: #ffebee;
+  color: #b71c1c;
 }
 
 
